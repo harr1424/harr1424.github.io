@@ -18,6 +18,115 @@
     </div>
     <div class="pt-5"></div>
     <div class="row">
+        <div class="col-md-12 ">
+            <h3>Mobile Application Development</h3>
+            <p>Eager to learn more about software development, and disappointed by the course offerings at UMT,
+                I was fortunate to work with Patricia Duce in order to complete an Android Developer
+                <a href="https://developer.android.com/courses/android-basics-kotlin/course">training course</a>
+                and use the material contained therein to develop a course taught for the first time at UMT in Fall,
+                2022.
+                Android development has been an excellent way to get hands on practice writing clean code and
+                work with software architecture patterns common to industry applications,
+                especially <i>model-view-viewmodel
+                    <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel">(MVMM)</a></i> which is
+                <a href="https://developer.android.com/jetpack/guide">officially endorsed</a> as a best practice
+                when building apps. According to Android: </p>
+            <blockquote CITE="https://developer.android.com/jetpack/guide"><I>
+                Another important principle is that you should drive your UI from data models, preferably persistent
+                models.
+                Data models represent the data of an app. They're independent from the UI elements and other components
+                in your app. This means that they are not tied to the UI and app component lifecycle, but will still be
+                destroyed when the OS decides to remove the app's process from memory.
+            </I></blockquote>
+            <p>
+                This effectively separates the application into two layers: a user-interface (UI) layer, and
+                a data layer. This concept is just one example of various design principles that I learned while
+                exploring application development. While it was necessary to focus solely on Android development
+                for the purposes of creating a cirriculum for future students, I was also able to explore iOS development
+                using Swift and the Flutter framework.
+            </p>
+            <br>
+            <h3>What I've Learned</h3>
+            <p>
+                While Android applications have historically been written using Java, in May, 2019 Google announced
+                that the officially supported language for Android development would be
+                <a href="https://en.wikipedia.org/wiki/Kotlin_(programming_language)">Kotlin</a>.
+                Kotlin has much in common with Java but its syntax has been changed to support type inference and
+                eliminate the terminating semicolons, among many other features such as inline lambda functions,
+                null safety, range expressions, and coroutines, all of which are explored in depth in the
+                <a href="https://developer.android.com/courses/android-basics-kotlin/course">training course</a> that
+                I completed.
+            </p>
+            <p>
+                This course also emphaised the importance of testing application code, and each module contained an
+                activity designed to teach how to write effective unit and functional tests.
+                After teaching foundational concepts such as user interface (UI) management using layout resource files,
+                click listeners, etc. the course demonstrated how to implement a
+                <a href="https://developer.android.com/guide/topics/ui/layout/recyclerview">Recycler View</a>.
+                Recycler Views are the component inside of Android applications that allow for an infinitely scrollable list.
+                Think of any 'feed' you have encountered such as news feed on LinkedIn or Twitter, and you will
+                realize you have encountered a Recycler View or its equivalent many times.
+                A fascinating amount of effort has gone into their development such that they provide a user-friendly
+                experience by scrolling smoothly (not freezing or jerking as fresh list items are loaded into the list).
+            </p>
+            <p>
+                THe following is a code snippet from my application <i>ListMaker</i> which demonstrates the use of a
+                Recycler View, and its individual components will be elaborated upon below:
+            </p>
+            <pre>
+                <code>
+class MainAdapter(
+    private val onItemClick: (MainItem) -> Unit, private val onItemLongClick: (MainItem) -> Boolean
+) : ListAdapter<MainItem, MainAdapter.ViewHolder>(DiffCallback) {
+
+    companion object DiffCallback : DiffUtil.ItemCallback<MainItem>() {
+        override fun areItemsTheSame(oldItem: MainItem, newItem: MainItem): Boolean {
+            return oldItem.itemName == newItem.itemName
+        }
+
+        override fun areContentsTheSame(oldItem: MainItem, newItem: MainItem): Boolean {
+            return oldItem == newItem
+        }
+
+    }
+
+    class ViewHolder(private var binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: MainItem) {
+            binding.listItemText.text = item.itemName.toString()
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val viewHolder = ViewHolder(
+            ListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
+        viewHolder.itemView.setOnClickListener {
+            val position = viewHolder.adapterPosition
+            onItemClick(getItem(position))
+        }
+        viewHolder.itemView.setOnLongClickListener {
+            val position = viewHolder.adapterPosition
+            onItemLongClick(getItem(position))
+        }
+        return viewHolder
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+}
+                </code>
+            </pre>
+
+
+        </div>
+    </div>
+    <div class="pt-5"></div>
+    <div class="row">
         <div class="col-md-6 text-center">
             <h3>
                 <a href="https://github.com/harr1424/ListMaker">ListMaker</a>
@@ -59,7 +168,7 @@
             <img alt="Koradi App screenshot" class="mx-auto d-block" height="700" src="images/koradi.png"/>
             <br>
             <a href='https://play.google.com/store/apps/details?id=com.koradi.radio&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
-            style="display: inline; overflow: hidden; border-radius: 23px; width: 250px; height: 100px;"><img
+               style="display: inline; overflow: hidden; border-radius: 23px; width: 250px; height: 100px;"><img
                     alt='Get it on Google Play'
                     height="100"
                     src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
