@@ -26,15 +26,16 @@
                 and use the material contained therein to develop a course taught for the first time at UMT in Fall,
                 2022.
                 Android development has been an excellent way to get hands on practice writing clean code and
-                work with software architecture patterns common to industry applications,
+                work with software architecture patterns commonly found in industry applications,
                 especially <i>model-view-viewmodel
                     <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel">(MVMM)</a></i> which is
                 <a href="https://developer.android.com/jetpack/guide">officially endorsed</a> as a best practice
-                when building apps. According to Android: </p>
+                when building Android apps.</p>
+            <p> According to Android:</p>
             <blockquote CITE="https://developer.android.com/jetpack/guide"><I>
                 Another important principle is that you should drive your UI from data models, preferably persistent
                 models.
-                Data models represent the data of an app. They're independent from the UI elements and other components
+                Data models represent the data of an app. They're independent of the UI elements and other components
                 in your app. This means that they are not tied to the UI and app component lifecycle, but will still be
                 destroyed when the OS decides to remove the app's process from memory.
             </I></blockquote>
@@ -42,37 +43,39 @@
                 This effectively separates the application into two layers: a user-interface (UI) layer, and
                 a data layer. This concept is just one example of various design principles that I learned while
                 exploring application development. While it was necessary to focus solely on Android development
-                for the purposes of creating a cirriculum for future students, I was also able to explore iOS development
-                using Swift and the Flutter framework.
+                for the purposes of creating a curriculum for future students, I was also able to explore iOS development
+                using Swift and the Flutter framework which uses the Dart programming language.
             </p>
             <br>
             <h3>What I've Learned</h3>
             <p>
-                While Android applications have historically been written using Java, in May, 2019 Google announced
+                While Android applications have historically been written in Java, in May 2019 Google announced
                 that the officially supported language for Android development would be
                 <a href="https://en.wikipedia.org/wiki/Kotlin_(programming_language)">Kotlin</a>.
                 Kotlin has much in common with Java but its syntax has been changed to support type inference and
                 eliminate the terminating semicolons, among many other features such as inline lambda functions,
-                null safety, range expressions, and coroutines, all of which are explored in depth in the
-                <a href="https://developer.android.com/courses/android-basics-kotlin/course">training course</a> that
-                I completed.
+                null safety, range expressions, and coroutines, all of which were explored in depth in the
+                <a href="https://developer.android.com/courses/android-basics-kotlin/course">training course</a>.
             </p>
             <p>
-                This course also emphaised the importance of testing application code, and each module contained an
-                activity designed to teach how to write effective unit and functional tests.
+                This course also emphasised the importance of testing application code, and each module contained an
+                activity related to writing effective unit and functional tests.
                 After teaching foundational concepts such as user interface (UI) management using layout resource files,
                 click listeners, etc. the course demonstrated how to implement a
                 <a href="https://developer.android.com/guide/topics/ui/layout/recyclerview">Recycler View</a>.
                 Recycler Views are the component inside of Android applications that allow for an infinitely scrollable list.
-                Think of any 'feed' you have encountered such as news feed on LinkedIn or Twitter, and you will
-                realize you have encountered a Recycler View or its equivalent many times.
-                A fascinating amount of effort has gone into their development such that they provide a user-friendly
-                experience by scrolling smoothly (not freezing or jerking as fresh list items are loaded into the list).
+                Think of any 'feed' you have encountered such as news feed on LinkedIn or Twitter, and you have the idea..
+                Recycler Views have been designed to  provide a user-friendly
+                experience by scrolling smoothly and not freezing or jerking as fresh list items are loaded into the list.
             </p>
             <p>
                 THe following is a code snippet from my application <i>ListMaker</i> which demonstrates the use of a
-                Recycler View, and its individual components will be elaborated upon below:
+                Recycler View. Its individual components will be explained below:
             </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 ">
             <pre>
                 <code>
 class MainAdapter(
@@ -121,6 +124,24 @@ class MainAdapter(
 }
                 </code>
             </pre>
+        </div>
+        <div class="col-md-6 ">
+            <div class="pt-3"></div>
+            <ul>
+                <li>
+                The <i>MainAdapter</i> class constructor expects as arguments two click listeners that determine
+                what occurs if a list item is clicked or long-clicked respectively and extends the <i>ListAdapter</i>
+                class which expects a <i>DifCallback</i> object as an argument.
+                </li>
+                <li>
+                    <i>ListAdapter</i> is a base class used for presenting list data in a Recycler View
+                </li>
+                <li>
+                    <i>DiffCallback</i> is a class that contains methods for computing the difference between two lists
+                    and is useful to detect when only one or a few list elements have changed, and update only those
+                    elements as opposed to the entire list.
+                </li>
+            </ul>
 
 
         </div>
