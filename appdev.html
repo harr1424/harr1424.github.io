@@ -9,6 +9,8 @@
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
 
+    <link href="style.css" rel="stylesheet"/>
+
     <title>Mobile Application Development</title>
 </head>
 <body>
@@ -25,12 +27,17 @@
                 <a href="https://developer.android.com/courses/android-basics-kotlin/course">training course</a>
                 and use the material contained therein to develop a course taught for the first time at UMT in Fall,
                 2022.
+            </p>
+            <br>
+            <h3>What I've Learned: Application Fundamentals</h3>
+            <p>
                 Android development has been an excellent way to get hands on practice writing clean code and
                 work with software architecture patterns commonly found in industry applications,
-                especially <i>model-view-viewmodel
-                    <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel">(MVMM)</a></i> which is
-                <a href="https://developer.android.com/jetpack/guide">officially endorsed</a> as a best practice
-                when building Android apps.</p>
+                especially <i>model-view-viewmodel (
+                <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel">MVMM</a></i>) which is
+                <a href="https://developer.android.com/jetpack/guide">endorsed</a> as a best practice
+                when building Android apps.
+            </p>
             <p> According to Android:</p>
             <blockquote CITE="https://developer.android.com/jetpack/guide"><I>
                 Another important principle is that you should drive your UI from data models, preferably persistent
@@ -42,12 +49,8 @@
             <p>
                 This effectively separates the application into two layers: a user-interface (UI) layer, and
                 a data layer. This concept is just one example of various design principles that I learned while
-                exploring application development. While it was necessary to focus solely on Android development
-                for the purposes of creating a curriculum for future students, I was also able to explore iOS development
-                using Swift and the Flutter framework which uses the Dart programming language.
+                exploring application development.
             </p>
-            <br>
-            <h3>What I've Learned</h3>
             <p>
                 While Android applications have historically been written in Java, in May 2019 Google announced
                 that the officially supported language for Android development would be
@@ -63,10 +66,13 @@
                 After teaching foundational concepts such as user interface (UI) management using layout resource files,
                 click listeners, etc. the course demonstrated how to implement a
                 <a href="https://developer.android.com/guide/topics/ui/layout/recyclerview">Recycler View</a>.
-                Recycler Views are the component inside of Android applications that allow for an infinitely scrollable list.
-                Think of any 'feed' you have encountered such as news feed on LinkedIn or Twitter, and you have the idea..
-                Recycler Views have been designed to  provide a user-friendly
-                experience by scrolling smoothly and not freezing or jerking as fresh list items are loaded into the list.
+                Recycler Views are the component inside of Android applications that allow for an infinitely scrollable
+                list.
+                Think of any 'feed' you have encountered such as news feed on LinkedIn or Twitter, and you have the
+                idea..
+                Recycler Views have been designed to provide a user-friendly
+                experience by scrolling smoothly and not freezing or jerking as fresh list items are loaded into the
+                list.
             </p>
             <p>
                 THe following is a code snippet from my application <i>ListMaker</i> which demonstrates the use of a
@@ -129,25 +135,233 @@ class MainAdapter(
             <div class="pt-3"></div>
             <ul>
                 <li>
-                The <i>MainAdapter</i> class constructor expects as arguments two click listeners that determine
-                what occurs if a list item is clicked or long-clicked respectively and extends the <i>ListAdapter</i>
-                class which expects a <i>DifCallback</i> object as an argument.
+                    The <i>MainAdapter</i> class constructor expects as arguments two click listeners that determine
+                    what occurs if a list item is clicked or long-clicked respectively and extends the
+                    <i>ListAdapter</i>
+                    class which expects a <i>DifCallback</i> object as an argument.
                 </li>
                 <li>
-                    <i>ListAdapter</i> is a base class used for presenting list data in a Recycler View
+                    <i>ListAdapter</i> is a base class used for presenting list data in a Recycler View.
                 </li>
                 <li>
                     <i>DiffCallback</i> is a class that contains methods for computing the difference between two lists
                     and is useful to detect when only one or a few list elements have changed, and update only those
                     elements as opposed to the entire list. Here <i>DiffCallback</i> is implemented as a
-                    <a href="https://kotlinlang.org/docs/object-declarations.html#companion-objects">companion object</a>.
+                    <a href="https://kotlinlang.org/docs/object-declarations.html#companion-objects">companion
+                        object</a>.
                 </li>
                 <li>
-                    A companion object is:
+                    A companion object is an example of the <a href="https://en.wikipedia.org/wiki/Singleton_pattern">Singleton
+                    design pattern</a>
+                    and also resemble static objects in Java in the sense that they belong to a specific class but not
+                    a given instance of that class.
+                </li>
+                <li>
+                    The <code>ViewHolder</code> class accepts a <code>ListItemBinding</code> object as an argument. A
+                    <code>ListItem</code> has been defined
+                    in a separate xml file and in this case contains only instructions on how to display a text field.
+                    The <code>ViewHolder</code> class is responsible for using this binding object to set
+                    the text field of a given
+                    list item to the appropriate item's name in the <code>bind</code> function.
+                </li>
+                <li>
+                    The <code>onCreateViewHolder</code> function returns a <code>ViewHolder</code> and is responsible
+                    for
+                    <a href="https://developer.android.com/reference/android/view/LayoutInflater">inflating</a> the
+                    <code>ListItem</code> view.
+                </li>
+                <li>
+                    Additionally two click listeners are set within <code>onCreateViewHolder</code>. Additionally
+                    listeners can be set here as well that handle the application's response to specific gestures
+                    or other events.
+                </li>
+                <li>
+                    Lastly, the <code>onBindViewHolder</code> function is responsible for performing the work defined
+                    in <code>onCreateViewHolder</code> and therefore also any work defined in the <code>bind</code>
+                    function in the <code>ViewHolder</code> constructor. In this case this entails setting a
+                    <code>ListItem</code>'s text field to the appropriate item's name and setting two click listeners.
                 </li>
             </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 ">
+            <h3>What I've Learned: Application Navigation</h3>
+            <p>
+                Android provides a
+                <a href="https://developer.android.com/guide/navigation/navigation-getting-started">Navigation
+                    Component</a>
+                which is intended to simply the process of navigating between views within an application. In Android,
+                any screen displayed to a user is a view that has been defined in a <code>layout.xml</code> file. These
+                views can
+                be either activities or fragments. Simple applications can usually be contained within a single activity
+                and make use of fragments to display different views. Utilizing the Navigation Component in such a
+                situation is described below. The code for these examples has been taken from my solution to a
+                <a href="https://developer.android.com/codelabs/basic-android-kotlin-training-project-lunch-tray#0">project</a>
+                in the third module of the <a href="https://developer.android.com/courses/android-basics-kotlin/course">Android
+                Basics in Kotlin</a>
+                course:
+            </p>
+            <ol>
+                <li>
+                    Android applications have their programmatic entry point located in a <code>MainActivity</code>
+                    class (this can be modified in the <code>AndroidManifest.xml</code> file, but changing this doesn't
+                    appear to be a common practice). Within <code>MainActivity</code> we can initialize a
+                    <code>NavHostFragment</code> which is a fragment that will be used to display the views contained
+                    within our app. This fragment is owned by the <code>NavHost</code>, which contains the conext
+                    for naviagting using a <code>NavController</code>. We also initialize this
+                    <code>NavController</code>
+                    within <code>MainActivity</code>. These steps are demonstrated in the code below:
+                    <pre>
+                        <code>
+class MainActivity : AppCompatActivity() {
 
+    private lateinit var navController: NavController
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_main)
+
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+        navController = navHostFragment.navController
+
+        setupActionBarWithNavController(navController)
+    }
+}
+                        </code>
+                    </pre>
+                </li>
+                <li>
+                    Next, a <code>navGraph.xml</code> is necessary in order to define the fragments known to the
+                    <code>NavHost</code> and define both the directionality between fragments and their
+                    corresponding layout files:
+                    <pre>
+                        <code>
+                        <textarea cols="85" rows="10">
+<fragment
+        android:id="@+id/startOrderFragment"
+        android:name="com.example.lunchtray.ui.order.StartOrderFragment"
+        android:label="fragment_start_order"
+        tools:layout="@layout/fragment_start_order" >
+        <action
+            android:id="@+id/action_startOrderFragment_to_entreeMenuFragment"
+            app:destination="@id/entreeMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/entreeMenuFragment"
+        android:name="com.example.lunchtray.ui.order.EntreeMenuFragment"
+        android:label="fragment_entree_menu"
+        tools:layout="@layout/fragment_entree_menu" >
+        <action
+            android:id="@+id/action_entreeMenuFragment_to_sideMenuFragment"
+            app:destination="@id/sideMenuFragment" />
+        <action
+            android:id="@+id/action_entreeMenuFragment_to_startOrderFragment"
+            app:destination="@id/startOrderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sideMenuFragment"
+        android:name="com.example.lunchtray.ui.order.SideMenuFragment"
+        android:label="fragment_side_menu"
+        tools:layout="@layout/fragment_side_menu" >
+        <action
+            android:id="@+id/action_sideMenuFragment_to_accompanimentMenuFragment"
+            app:destination="@id/accompanimentMenuFragment" />
+        <action
+            android:id="@+id/action_sideMenuFragment_to_startOrderFragment"
+            app:destination="@id/startOrderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accompanimentMenuFragment"
+        android:name="com.example.lunchtray.ui.order.AccompanimentMenuFragment"
+        android:label="fragment_accompaniment_menu"
+        tools:layout="@layout/fragment_accompaniment_menu" >
+        <action
+            android:id="@+id/action_accompanimentMenuFragment_to_checkoutFragment"
+            app:destination="@id/checkoutFragment" />
+        <action
+            android:id="@+id/action_accompanimentMenuFragment_to_startOrderFragment"
+            app:destination="@id/startOrderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/checkoutFragment"
+        android:name="com.example.lunchtray.ui.order.CheckoutFragment"
+        android:label="fragment_checkout"
+        tools:layout="@layout/fragment_checkout" >
+        <action
+            android:id="@+id/action_checkoutFragment_to_startOrderFragment"
+            app:destination="@id/startOrderFragment" />
+    </fragment>
+                        </textarea>
+                        </code>
+                    </pre>
+                </li>
+                <li>
+                    Now click listeners must be incorporated into each fragment that will trigger the appropriate
+                    transition from one view to another:
+                    <pre>
+                        <Code>
+class StartOrderFragment : Fragment() {
+    private var _binding: FragmentStartOrderBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentStartOrderBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+        // Navigate to entree menu
+        binding.startOrderBtn.setOnClickListener { // Setting the click listener to call navigation action
+            findNavController().navigate(R.id.action_startOrderFragment_to_entreeMenuFragment)
+        }
+        return root
+    }
+}
+                        </Code>
+                    </pre>
+                </li>
+            </ol>
+            <p>
+                These steps demonstrate the implementation of code directly related to the Navigation Component, but it
+                is
+                worth noting that additional steps are necessary such as placing a <code>FragmentContainerView</code>
+                inside the <code>MainActivity</code> layout file as well as defining the layout files for each
+                individual fragment. (This app also makes use of a <code>ViewModel</code>, but this will be discussed
+                in another section). Once all this has been finished, we can navigate through the application as
+                demonstrated below:
+            </p>
+        </div>
+    </div>
+    <div class="pt-5"></div>
+    <div class="row">
+        <div class="col-md-4 ">
+            <img src="images/LunchTray/start_order.png" width="400">
+        </div>
+        <div class="col-md-4 ">
+            <img src="images/LunchTray/entree.png" width="400">
+        </div>
+        <div class="col-md-4 ">
+            <img src="images/LunchTray/side.png" width="400">
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-4 ">
+            <img src="images/LunchTray/accomp.png" width="400">
+        </div>
+        <div class="col-md-4 ">
+            <img src="images/LunchTray/checkout.png" width="400">
+        </div>
+        <div class="col-md-4 text-center my-auto">
+            <p>
+                Clcicking the back arrow located in the AppBar at the top of the screen will result in a navigation
+                action that displays the previosuly shown fragment.
+            </p>
         </div>
     </div>
     <div class="pt-5"></div>
@@ -166,7 +380,7 @@ class MainAdapter(
                 <a href="https://developer.android.com/guide/navigation/navigation-getting-started">Navigation
                     Component</a>.
             </p>
-            <img alt="Koradi App screenshot" class="mx-auto d-block" height="700" src="images/groceries.png"/>
+            <img alt="Koradi App screenshot" class="mx-auto d-block" height="700" src="images/ListMaker/groceries.png"/>
             <br>
             <a href='https://play.google.com/store/apps/details?id=com.harr1424.listmaker&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img
                     alt='Get it on Google Play'
@@ -190,7 +404,7 @@ class MainAdapter(
                 <a href="https://pub.dev/packages/audio_service">background audio service</a>
                 in order to continuously play media.
             </p>
-            <img alt="Koradi App screenshot" class="mx-auto d-block" height="700" src="images/koradi.png"/>
+            <img alt="Koradi App screenshot" class="mx-auto d-block" height="700" src="images/ListMaker/koradi.png"/>
             <br>
             <a href='https://play.google.com/store/apps/details?id=com.koradi.radio&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
                style="display: inline; overflow: hidden; border-radius: 23px; width: 250px; height: 100px;"><img
