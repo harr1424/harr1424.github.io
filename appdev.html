@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -582,10 +582,450 @@ object Alerts {
             </ul>
         </div>
     </div>
+    <div class="row">
+        <p>
+            Now that our network layer has been implemented, let's look at the JSON data our request will return:
+            <pre>
+        <code>
+{
+  "@context": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld",
+    {
+      "@version": "1.1",
+      "wx": "https://api.weather.gov/ontology#",
+      "@vocab": "https://api.weather.gov/ontology#"
+    }
+  ],
+  "type": "FeatureCollection",
+  "features": [
+  {
+      "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.aca7b95ba759466c3273df883d6e0473659ffa25.003.1",
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.aca7b95ba759466c3273df883d6e0473659ffa25.003.1",
+        "@type": "wx:Alert",
+        "id": "urn:oid:2.49.0.1.840.0.aca7b95ba759466c3273df883d6e0473659ffa25.003.1",
+        "areaDesc": "Western Lemhi County; Eastern Lemhi County",
+        "geocode": {
+          "SAME": [
+            "016059"
+          ],
+          "UGC": [
+            "IDZ009",
+            "IDZ010"
+          ]
+        },
+        "affectedZones": [
+          "https://api.weather.gov/zones/forecast/IDZ009",
+          "https://api.weather.gov/zones/forecast/IDZ010"
+        ],
+        "references": [
+          {
+            "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.2e593b9f420cffc3e2c93e8268176059049b9048.002.1",
+            "identifier": "urn:oid:2.49.0.1.840.0.2e593b9f420cffc3e2c93e8268176059049b9048.002.1",
+            "sender": "w-nws.webmaster@noaa.gov",
+            "sent": "2022-04-28T10:32:00-06:00"
+          },
+          {
+            "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.44104654e0ceaf0ae6560bb03ea5e3be76c3430e.003.1",
+            "identifier": "urn:oid:2.49.0.1.840.0.44104654e0ceaf0ae6560bb03ea5e3be76c3430e.003.1",
+            "sender": "w-nws.webmaster@noaa.gov",
+            "sent": "2022-04-29T02:51:00-06:00"
+          }
+        ],
+        "sent": "2022-04-29T08:45:00-06:00",
+        "effective": "2022-04-29T08:45:00-06:00",
+        "onset": "2022-04-29T08:45:00-06:00",
+        "expires": "2022-04-29T09:45:00-06:00",
+        "ends": "2022-04-29T09:00:00-06:00",
+        "status": "Actual",
+        "messageType": "Update",
+        "category": "Met",
+        "severity": "Moderate",
+        "certainty": "Likely",
+        "urgency": "Expected",
+        "event": "Winter Weather Advisory",
+        "sender": "w-nws.webmaster@noaa.gov",
+        "senderName": "NWS Missoula MT",
+        "headline": "Winter Weather Advisory issued April 29 at 8:45AM MDT until April 29 at 9:00AM MDT by NWS Missoula MT",
+        "description": "Snow showers will continue today, but very minimal impacts are\nexpected, so the advisory will be allowed to expire at 9AM.",
+        "instruction": null,
+        "response": "Execute",
+        "parameters": {
+          "AWIPSidentifier": [
+            "WSWMSO"
+          ],
+          "WMOidentifier": [
+            "WWUS45 KMSO 291445"
+          ],
+          "NWSheadline": [
+            "WINTER WEATHER ADVISORY WILL EXPIRE AT 9 AM MDT THIS MORNING ABOVE 4500 FEET"
+          ],
+          "BLOCKCHANNEL": [
+            "EAS",
+            "NWEM",
+            "CMAS"
+          ],
+          "VTEC": [
+            "/O.EXP.KMSO.WW.Y.0029.000000T0000Z-220429T1500Z/"
+          ],
+          "eventEndingTime": [
+            "2022-04-29T15:00:00+00:00"
+          ]
+        }
+      }
+    },
+        </code>
+    </pre>
+        <p>
+            There is a lot of information here, but we are only concerned with a few onjects in the <code>properties</code>
+            array. Regardless, we must create data classes that the JSON response can be mapped to:
+            <pre>
+        <code>
+data class Alert (
+    @Json(name = "@context") val context: List<Any>,
+    val type: String,
+    val features: List<AlertFeature>,
+    val title: String,
+    val updated: String
+    )
+
+data class AlertFeature(
+    val id: String,
+    val type: String,
+    val geometry: String?,
+    val properties: AlertProperties,
+)
+
+data class AlertProperties(
+    @Json(name = "@id") val fullId: String,
+    @Json(name = "@type") val type: String,
+    val id: String,
+    val areaDesc: String,
+    val geocode: Geocode,
+    val affectedZones: List<String>,
+    val references: List<com.harr1424.privateweather.network.Reference>,
+    val sent: String,
+    val effective: String,
+    val onset: String,
+    val expires: String,
+    val ends: String,
+    val status: String,
+    val messageType: String,
+    val category: String,
+    val severity: String,
+    val certainty: String,
+    val urgency: String,
+    val event: String,
+    val sender: String,
+    val senderName: String,
+    val headline: String,
+    val description: String,
+    val instruction: String,
+    val response: String,
+    val parameters: Parameter
+)
+
+data class Geocode(
+    val SAME: List<String>,
+    val UGC: List<String>
+)
+
+data class Reference(
+    @Json(name = "@id") val id: String,
+    val identifier: String,
+    val sender: String,
+    val sent: String
+)
+
+data class Parameter(
+    val AWIPSidentifier: List<String>,
+    val WMOidentifier: List<String>,
+    val BLOCKCHANNEL: List<String>,
+    //@Json(name = "EAS-ORG") val EASORG: List<String>,
+    val VTEC: List<String>,
+    val eventEndingTime: List<String>,
+    //val expiredReferences: List<String>
+)
+        </code>
+    </pre>
+        <p>
+            Now that we have created classes (for each JSON array) and fields (for each JSON object) we can begin to
+            work with the data returned by the API:
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-md-6 ">
+
+            <pre>
+        <code>
+class AlertViewModel : ViewModel() {
+
+    enum class AlertStatus { LOADING, ERROR, DONE }
+
+    private val _status = MutableLiveData<AlertStatus>()
+    val status: LiveData<AlertStatus> = _status
+
+    private val _alerts = MutableLiveData<Alert>()
+    val alerts: LiveData<Alert> = _alerts
+
+    /**
+     * Call getAlerts() on init so we can display status immediately.
+     */
+    init {
+        getAlerts()
+    }
+
+    private fun getAlerts() {
+        viewModelScope.launch {
+            _status.value = AlertStatus.LOADING
+            try {
+                _alerts.value = Alerts.retrofitService.getALerts()
+                _status.value = AlertStatus.DONE
+            } catch (e: Exception) {
+                Log.e("Alert", e.toString())
+                _status.value = AlertStatus.ERROR
+                _alerts.value = Alert(context = listOf(),
+                type = "ERROR", features = listOf(), title = "ERROR",
+                updated = "ERROR")
+            }
+        }
+    }
+}
+        </code>
+    </pre>
+        </div>
+        <div class="col-md-6 ">
+            <ul>
+                <li>
+                    We can declare an <code>enum</code> class that contains the three possible states of our network
+                    request: <code>LOADING, ERROR, DONE</code>
+                </li>
+                <li>
+                    We declare fields (using the backing property described in the previous section) to hold the value
+                    of both the network request status and the API response
+                </li>
+                <li>
+                    The function <code>getAlerts()</code> launches a <code>coroutine</code> (discussed below) that
+                    will avoid making any asynchronous requests on the main UI thread
+                </li>
+                <li>
+                    If the request is successful, we can access the <code>Alert</code> object via our
+                    <code>AlertViewModel</code>
+                </li>
+                <li>
+                    If any errors occur, the UI will display an error icon and we can examine application logs
+                    in order to troubleshoot
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <div class="row">
+        <p>
+            We performed our network request on a background thread by launching a
+            <a href="https://kotlinlang.org/docs/coroutines-overview.html">coroutine</a> from the
+            <a href="https://developer.android.com/kotlin/coroutines">ViewModel Scope</a>. This ensures that
+            no matter how long the request takes to complete our UI will not appear to freeze.
+        </p>
+
+        <p>
+            Next it is necessary to define two binding adapters that describe how the data stored in
+            <code>AlertViewModel</code> will be displayed:
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-md-6 ">
+            <pre>
+                <code>
+@BindingAdapter("nwsAlertStatus")
+fun bindAlertStatus(statusImageView: ImageView, status: AlertViewModel.AlertStatus) {
+    when (status) {
+        AlertViewModel.AlertStatus.LOADING -> {
+            statusImageView.visibility = View.VISIBLE
+            statusImageView.setImageResource(R.drawable.loading_animation)
+        }
+        AlertViewModel.AlertStatus.ERROR -> {
+            statusImageView.visibility = View.VISIBLE
+            statusImageView.setImageResource(R.drawable.ic_connection_error)
+        }
+        AlertViewModel.AlertStatus.DONE -> {
+            statusImageView.visibility = View.GONE
+        }
+    }
+}
+
+@BindingAdapter("alertListData")
+fun bindRecyclerView(recyclerView: RecyclerView,
+                     data: List<AlertFeature>?) {
+    val adapter = recyclerView.adapter as AlertAdapter
+    adapter.submitList(data)
+}
+                </code>
+            </pre>
+        </div>
+        <div class="col-md-6 ">
+            <ul>
+                <li>
+                    The first binding adapter allows us to bind an appropriate image resource file
+                    (either a loading icon or an error icon) to an <code>ImageView</code> in our
+                    <code>alert_fragment.xml</code> layout file shown below:
+                    <textarea cols="65" rows="10">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.harr1424.privateweather.models.AlertViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.harr1424.privateweather.MainActivity">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/alert_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            android:clipToPadding="false"
+            app:alertListData="@{viewModel.alerts.component3()}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/alert_item" />
+
+        <ImageView
+            android:id="@+id/alert_status_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:nwsAlertStatus="@{viewModel.status}" />
 
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+                    </textarea>
+                </li>
+                <li>
+                    The second binding adapter defines how the <code>Alert</code> data we are interested in will be
+                    passed to the <code>RecyclerView</code>. For this, we need to create an <code>AlertAdapter</code>
+                    class and also define an <code>alert_item.xml</code> layout file, which will be shown below
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 ">
+            <h3><code>AlertAdapter</code></h3>
+            <pre>
+                <code>
+class AlertAdapter :
+    androidx.recyclerview.widget.ListAdapter<AlertFeature, AlertAdapter.AlertViewHolder>(DiffCallback){
 
-        <div class="pt-5"></div>
+
+    class AlertViewHolder(private var binding: AlertItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(alert: AlertFeature) {
+            binding.alertHeadline.text = alert.properties.headline
+            binding.alertDescription.text = alert.properties.description
+            binding.alertInstructions.text = alert.properties.instruction
+            binding.executePendingBindings()
+        }
+    }
+
+    companion object DiffCallback : DiffUtil.ItemCallback<AlertFeature>() {
+        override fun areItemsTheSame(oldItem: AlertFeature, newItem: AlertFeature): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: AlertFeature, newItem: AlertFeature): Boolean {
+            return oldItem.properties == newItem.properties
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlertViewHolder {
+        return AlertViewHolder(AlertItemBinding.inflate(LayoutInflater.from(parent.context)))
+    }
+
+    override fun onBindViewHolder(holder: AlertViewHolder, position: Int) {
+        val alert = getItem(position)
+        holder.bind(alert)
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div class="col-md-4">
+            <h3><code>alert_item.xml</code></h3>
+
+                    <textarea cols="60" rows="30">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/alert_headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/alert_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alert_headline" />
+
+    <TextView
+        android:id="@+id/alert_instructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alert_description"
+        android:layout_marginBottom="32dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+                    </textarea>
+
+
+    </div>
+    </div>
+    <div class="row">
+        <p>
+            With everything implemented, we can run our application and observe the result:
+        </p>
+        <h1>INSERT IMAGE and center</h1>
+    </div>
+    <div class="pt-5"></div>
+    <div class="row">
+        <div class="col-md-12 ">
+            <h3>What I've Learned: Persisting user data using the Room library</h3>
+            <p>
+                Many applications receive and store information from their users. Oftentimes, this is done so that
+                a user can return to the application at a later time and retrieve this data. In this section, we will
+                explore how the Android Jetpack
+                <a href="https://developer.android.com/training/data-storage/room">Room</a> library can be used to
+                accomplish this.
+            </p>
+
+        </div>
+    </div>
+    <div class="pt-5"></div>
     <div class="row">
         <div class="col-md-6 text-center">
             <h3>
