@@ -1022,12 +1022,118 @@ class AlertAdapter :
                 a user can return to the application at a later time and retrieve this data. In this section, we will
                 explore how the Android Jetpack
                 <a href="https://developer.android.com/training/data-storage/room">Room</a> library can be used to
-                accomplish this.
+                accomplish this. This section demonstrates how a simple list application or note-taking application
+                can be created. This application allows users to create a list of main items where each main item can
+                be considered a task category. Clicking on a main item navigates to a list of items grouped as
+                children of the main item. For example a main item 'grocery' may be clicked to display a list of
+                grocery items such as 'milk', 'eggs', and 'cheese'. This app is my original work and is available on the
+                <a href="https://play.google.com/store/apps/details?id=com.harr1424.listmaker&hl=en_US&gl=US">Google Play Store</a>.
             </p>
+            <p>
+                First we must define a <code>Data Entity</code> which describes a database table using SQL conventions:
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 ">
+            <pre>
+                <code>
+@Entity
+data class MainItem(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    @ColumnInfo(name = "item_name") val itemName: String?
+)
 
+@Entity(primaryKeys = ["main_item_id", "detail_item_name"])
+data class DetailItem(
+    @NonNull @ColumnInfo(name = "main_item_id") val mainItemId: Int,
+    @NonNull @ColumnInfo(name = "detail_item_name") val detailItemName: String
+)
+                </code>
+            </pre>
+        </div>
+        <div class="col-md-6 ">
+            <ul>
+                <li>
+                    The <code>MainItem</code> data class will be used to create a table containing main items
+                    and contains only two columns: a unique id identifying the main item and the main item's name
+                </li>
+                <li>
+                    The <code>DetailItem</code> data class will be used to create a table containing detail items
+                    and contains two columns: a reference to the parent main item and the detail item name. These
+                    columns are combined to form a primary key, in case a detail item appears within multiple
+                    main item categories.
+                </li>
+            </ul>
         </div>
     </div>
     <div class="pt-5"></div>
+    <div class="row">
+        <p>
+            Next, we declare a <code>Data Access Object</code> (DAO) which is just an interface describing what
+            operations can be performed on a database table and what this operation will return. The Room library
+            provides three DAO operations anytime a DAO is declared: insert, delete, and update. All other table
+            operations must be explicitly defined:
+        </p>
+        <div class="col-md-6 ">
+            <pre>
+                <code>
+@Dao
+interface MainItemDao {
+    @Query("SELECT * FROM MainItem ORDER BY id ASC")
+    fun getAll(): Flow<List<MainItem>>
+
+    @Query("SELECT * FROM MainItem WHERE id = :itemId")
+    fun getById(itemId: Int): Flow<MainItem>
+
+    @Query("SELECT * FROM MainItem WHERE item_name LIKE :name")
+    fun findByName(name: String): Flow<List<MainItem>>
+
+    @Query(" DELETE FROM detailitem where main_item_id = :mainItemId")
+    fun deleteDetailsFromMain(mainItemId: Int)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(item: MainItem)
+
+    @Delete
+    fun delete(item: MainItem)
+
+    @Update
+    fun update(item: MainItem)
+}
+                </code>
+            </pre>
+        </div>
+        <div class="col-md-6 ">
+            <ul>
+                <li>
+                    The <code>getAll()</code> function corresponds to a SQL query that will return all main items
+                    sorted in the order that they were added to the list
+                </li>
+                <li>
+                    The <code>getById()</code> functions corresponds to a SQL query that will return the item matching
+                    the id passed to the function as an argument. This will be useful when adding click listeners to
+                    each main item in order to define navigation to their detail item list
+                </li>
+                <li>
+                    The <code>findByName()</code> function isn't currently used in this application, but I defined it
+                    because I would like to add search functionality in the future.
+                </li>
+                <li>
+                    the <code>deleteDetailsFromMain()</code> function will delete all detail items should their parent
+                    main item be deleted by the user
+                </li>
+                <li>
+                    The <code>insert()</code> function has been modified such that if a main item exists already,
+                    a duplicate will be ignored
+                </li>
+            </ul>
+        </div>
+            <h1> describe FLOW</h1>
+
+        </div>
+        <div class="pt-5"></div>
     <div class="row">
         <div class="col-md-6 text-center">
             <h3>
