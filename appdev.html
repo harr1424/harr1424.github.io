@@ -359,12 +359,233 @@ class StartOrderFragment : Fragment() {
         </div>
         <div class="col-md-4 text-center my-auto">
             <p>
-                Clcicking the back arrow located in the AppBar at the top of the screen will result in a navigation
+                Clicking the back arrow located in the AppBar at the top of the screen will result in a navigation
                 action that displays the previosuly shown fragment.
             </p>
         </div>
     </div>
     <div class="pt-5"></div>
+    <div class="row">
+        <div class="col-md-12 ">
+            <h3>What I've Learned: ViewModels and MVVM Architecture</h3>
+            <p>
+                In Android a
+                <a href="https://developer.android.com/topic/libraries/architecture/viewmodel">ViewModel</a>
+                is used to store application data in a way that respects the Android application
+                <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">lifecycle</a>.
+                If data were to be stored local to a given activity or fragment, this data could be lost for any number
+                of reasons out of the control of the application user or programmer such as rotating the device screen,
+                the operating system re-allocating memory resources, and the activity or fragment loosing focus.
+                Additionally, ViewModels simplify the process of sharing data between fragments. Separating application
+                data from the user-interface is a common pattern in commercial codebases.
+            </p>
+            <p>
+                To explore the implementation of a ViewModel I have copied code from my solution to the
+                <a href="https://developer.android.com/codelabs/basic-android-kotlin-training-shared-viewmodel#0">Cupcake</a>
+                codelab.
+                Implementing a ViewModel within an application begins by simply declaring a new class that
+                extends the ViewModel base class:
+                <pre>
+            <code>
+class OrderViewModel : ViewModel() { }
+            </code>
+        </pre>
+            <p>
+                Next we define fields for our <code>OrderViewModel</code> class. There is a convention when doing this
+                in Kotlin termed the <i>backing property</i> which holds that a mutable private variable is accessed
+                by any functions within the <code>OrderViewModel</code> class and an immutable public variable is then provided for other classes
+                to access. This is similar in theory to using getters and setters in Java. The example below uses
+                <a href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a>
+                types:
+                <pre>
+            <code>
+     private val _quantity = MutableLiveData<Int>()
+    val quantity: LiveData<Int> = _quantity
+
+    private val _flavor = MutableLiveData<String>()
+    val flavor: LiveData<String> = _flavor
+
+    private val _date = MutableLiveData<String>()
+    val date: LiveData<String> = _date
+
+    private val _price = MutableLiveData<Double>()
+    val price: LiveData<String> = Transformations.map(_price) {
+        NumberFormat.getCurrencyInstance().format(it)
+    }
+            </code>
+        </pre>
+            <p>
+                The following function definitions demonstrate how the private immutable variables are used within
+                the <code>OrderViewModel</code> class:
+                <pre>
+            <code>
+    fun setQuantity(numberCupcakes: Int) {
+        _quantity.value = numberCupcakes
+        updatePrice()
+    }
+
+    fun setFlavor(desiredFlavor: String) {
+        _flavor.value = desiredFlavor
+    }
+
+    fun setDate(pickupDate: String) {
+        _date.value = pickupDate
+        updatePrice()
+    }
+
+    fun hasNoFalvorSet(): Boolean {
+        return _flavor.value.isNullOrEmpty()
+    }
+
+    private fun updatePrice() {
+        var calculatedPrice = (quantity.value ?: 0) * PRICE_PER_CUPCAKE
+        if (dateOptions[0] == _date.value) {
+            calculatedPrice += PRICE_FOR_SAME_DAY_PICKUP
+        }
+        _price.value = calculatedPrice
+    }
+            </code>
+        </pre>
+            <p>
+                Now that our <code>OrderViewModel</code> is implemented, we can access its fields and methods from
+                within our application. The following example demonstrates accessing <code>OrderViewModel</code>
+                from the fragment <code>StartFragment</code>:
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 ">
+
+            <pre>
+            <code>
+class StartFragment : Fragment() {
+
+    private val sharedViewModel: OrderViewModel by activityViewModels()
+
+    ...
+
+    // Begin a cupcake order by setting number of cupcakes and their flavor
+    fun orderCupcake(quantity: Int) {
+        sharedViewModel.setQuantity(quantity)
+        if (sharedViewModel.hasNoFalvorSet()) {
+            sharedViewModel.setFlavor(getString(R.string.vanilla))
+        }
+        findNavController().navigate(R.id.action_startFragment_to_flavorFragment)
+    }
+}
+            </code>
+        </pre>
+        </div>
+        <div class="col-md-6 ">
+            <ul>
+                <li>
+                    <code>activityViewModels()</code> is called to return access to an <code>OrderViewModel</code>
+                    instance shared between all fragments in the activity. The reference to this instance
+                    is declared in a variable <code>sharedViewModel</code>
+                </li>
+                <li>
+                    The methods defined in <code>OrderViewModel</code> can be accessed in order to update the value
+                    of the fields such as quantity and flavor.
+                </li>
+            </ul>
+            </div>
+    </div>
+    <p>
+        Implementing a <code>ViewModel</code> is very straightforward and provides an easy way for fragments to
+        access data that they have a common interest in. It also avoids numerous problems that can occur when code
+        corresponding to the user interface stores application data.
+    </p>
+    <div class="pt-5"></div>
+    <div class="row">
+        <div class="col-md-12 ">
+            <h3>What I've Learned: Retrieving Data from the Internet</h3>
+            <p>
+                Most mobile applications perform network requests in order to retrieve and display information to
+                their users such as emails, videos, and in the example for this section weather alerts. Android recommends
+                reforming this work on a background thread since network requests can take a significant amount of time
+                to complete. Performing network requests on the <i>main thread</i>, also known as the <i>UI thread</i> in
+                Android because this is where UI information processed, is not recommended. It is best practice to perform these
+                requests on a background thread in order to avoid the application appearing to freeze while the network request
+                is handled. This situation is the basis of
+                <a href="https://en.wikipedia.org/wiki/Asynchrony_(computer_programming)">asynchronus programming</a>.
+                 Additionally, Android recommends segregating application code relating to netowrk requests within its
+                own package, a practice which adheres to the
+                <a href="https://en.wikipedia.org/wiki/Modular_programming">modular design</a> technique. In the example below,
+                we will explore how this can be accomplished using two open source libraries designed for performing API
+                requests and converting the returned JSON into a data class which can be passed in turn to a
+                <code>ViewModel</code>.
+            </p>
+            <p>
+                First, we implement our network layer as shown below:
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 ">
+            <pre>
+                <code>
+private const val BASE_URL =
+    "https://api.weather.gov/"
+
+private val moshi = Moshi.Builder()
+    .add(KotlinJsonAdapterFactory())
+    .build()
+
+private val retrofit = Retrofit.Builder()
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .baseUrl(BASE_URL)
+    .build()
+
+interface nwsAlerts {
+    @GET("/alerts/active/zone/MTC063")
+    suspend fun getALerts(): Alert
+}
+
+object Alerts {
+    val retrofitService : nwsAlerts by lazy {
+        retrofit.create(nwsAlerts::class.java)
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div class="col-md-6 ">
+            <ul>
+                <li>
+                    First, we declare a reference to a <code>BASE_URL</code> which will simplify our API calls.
+                </li>
+                <li>
+                    Next we create a
+                    <a href="https://github.com/square/moshi">Moshi</a> object which will be used to deserialize the
+                    JSON we receive from the API endpoint into Kotlin data classes (we must still declare these classes,
+                    this will be demonstrated in the next section)
+                </li>
+                <li>
+                    Next we must also define a
+                    <a href="https://square.github.io/retrofit/">RetroFit</a> object responsible for converting the
+                    API HTTP response into an interface
+                </li>
+                <li>
+                    With our RetroFit object declared, we can now implement the interface which describes our API call.
+                    In this case we perform an HTTP request to a particular endpoint that will return weather alerts for
+                    Missoula County, Montana. The interface describes what the API call will do: return an Alert object,
+                    and the next step maps this HTTP request to a function
+                    <code>getAlerts()</code> that can be called from within our application code, specifically our
+                    <code>ViewModel</code>.
+                </li>
+                <li>
+                    Lastly, we create an <code>Alerts</code> object which holds an immutable variable (val in Kotlin)
+                    <code>retrofitService</code> described by the interface above that will be lazily constructed
+                    (here lazy means that this process will not occur until the <code>Alerts</code> object is first
+                    accessed).
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+
+        <div class="pt-5"></div>
     <div class="row">
         <div class="col-md-6 text-center">
             <h3>
