@@ -1009,10 +1009,15 @@ class AlertAdapter :
         <p>
             With everything implemented, we can run our application and observe the result:
         </p>
-        <h1>INSERT IMAGE and center</h1>
-        <img src="..." class="mx-auto d-block"/>
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+        <img src="images/Weather/alert.png" width="400" class="mx-auto d-block" alt="Alert Fragment Screenshot"/>
+        </div>
+        <div class="col-md-4">
+        </div>
 
-    </div>
+        </div>
     <div class="pt-5"></div>
     <div class="row">
         <div class="col-md-12 ">
@@ -1082,13 +1087,13 @@ data class DetailItem(
 @Dao
 interface MainItemDao {
     @Query("SELECT * FROM MainItem ORDER BY id ASC")
-    fun getAll(): Flow<List<MainItem>>
+    fun getAll(): Flow&lt;List&lt;MainItem>>
 
     @Query("SELECT * FROM MainItem WHERE id = :itemId")
-    fun getById(itemId: Int): Flow<MainItem>
+    fun getById(itemId: Int): Flow&lt;MainItem>
 
     @Query("SELECT * FROM MainItem WHERE item_name LIKE :name")
-    fun findByName(name: String): Flow<List<MainItem>>
+    fun findByName(name: String): Flow&lt;List&lt;MainItem>>
 
     @Query(" DELETE FROM detailitem where main_item_id = :mainItemId")
     fun deleteDetailsFromMain(mainItemId: Int)
@@ -1128,13 +1133,520 @@ interface MainItemDao {
                     The <code>insert()</code> function has been modified such that if a main item exists already,
                     a duplicate will be ignored
                 </li>
+                <li>
+                    Notice that when function return types are specified above they are wrapped in a
+                    <a href="https://developer.android.com/kotlin/flow">Flow</a> type which allows for these values to be
+                    continuously updated
+                </li>
             </ul>
         </div>
-            <h1> describe FLOW</h1>
+    </div>
+        <div class="pt-5"></div>
+        <div class="row">
+            <p>
+                Next we define an <code>AppDatabase</code> class that serves as the application's entry point in
+                accessing the persisted data:
+            </p>
+        </div>
+    <div class="row">
+        <div class="col-md-6 ">
+            <pre>
+                <code>
+@Database(entities = [MainItem::class, DetailItem::class], version = 2)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun mainItemDao(): MainItemDao
+    abstract fun detailItemDao(): DetailItemDao
+    companion object {
+        @Volatile
+        private var INSTANCE: AppDatabase? = null
+        fun getDatabase(context: Context): AppDatabase{
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    AppDatabase::class.java,
+                    "List Item Database"
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
+                INSTANCE = instance
+                return instance
+            }
+        }
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div class="col-md-6 ">
+            <ul>
+                <li>
+                    The <code>AppDatabase</code> class must be annotated with <code>
+                    @Database</code> and provide an entities array naming each data entity we have defined above
+                </li>
+                <li>
+                    Optionally a version number may be privided, this is essential is changes have been made to the
+                    database architecture, each change necessitates incrementing the version number by one
+                </li>
+                <li>
+                    The <code>AppDatabase</code> class extends the <code>RoomDataBase</code> base class and contains
+                    methods corresponding to each DAO that has been implemented
+                </li>
+                <li>
+                    The companion object (along with the <code>BaseApplication</code> class described below
+                    ensures that only one instance of the
+                    <code>AppDatabase</code> class is available while the application is running
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <p>
+            We are almost done with our Room specific implementations!
+            It is necessary to create a class <code>BaseApplication</code> so as to ensure
+            our app accesses our database ac a singleton instance:
+            <pre>
+        <code>
+class BaseApplication : Application() {
+    val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
+}
+        </code>
+    </pre>
+        <p>
+            And now we must modify our application manifest <code>AndroidManifest.xml</code> so that the application
+            launches from the <code>BaseApplication</code> class that we just created:
+            <textarea cols="100" rows="20">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.harr1424.listmaker">
+    <application
+        android:name = ".BaseApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ListMaker">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+            </textarea>
+        </p>
+        <p>
+            Now that we have finished implementing the necessary components to use the Room library in our application,
+            we can define our <code>ListViewModel</code> class to contain the logic for accessing the DAOs and
+            odifying our database tables:
+            <pre>
+        <code>
+class ListViewModel(
+    private val mainItemDao: MainItemDao,
+    private val detailItemDao: DetailItemDao
+): ViewModel() {
+    val allMainItems: LiveData<List<MainItem>> = mainItemDao.getAll().asLiveData()
 
+    fun getDetailItems(mainItemId: Int) : LiveData<List<DetailItem>> {
+        return detailItemDao.getDetailFromMain(mainItemId).asLiveData()
+    }
+
+    fun addMainItem(mainItem: MainItem) {
+        // launch a coroutine and call the DAO method to add a MainItem to the database
+        viewModelScope.launch(Dispatchers.IO) {
+            mainItemDao.insert(mainItem)
+        }
+    }
+
+    fun addDetailItem(mainItemId: Int, detailItemName: String) {
+        val detailItem = DetailItem(mainItemId = mainItemId, detailItemName = detailItemName)
+
+        // launch a coroutine and call the DAO method to add a DetailItem to the database
+        viewModelScope.launch(Dispatchers.IO) {
+            detailItemDao.insert(detailItem)
+        }
+    }
+
+    fun deleteMainItem(mainItem: MainItem) {
+        // call the DAO method to delete a MainItem
+        viewModelScope.launch(Dispatchers.IO) {
+            mainItemDao.delete(mainItem)
+        }
+    }
+
+    fun deleteDetailItem(detailItem: DetailItem) {
+        // call the DAO method to delete a DetailItem
+        viewModelScope.launch(Dispatchers.IO) {
+            detailItemDao.delete(detailItem)
+        }
+    }
+
+    fun deleteDetailsFromMain(mainItemId: Int) {
+        // call the DAO method to delete all DetailItems belonging to a MainItem
+        viewModelScope.launch(Dispatchers.IO) {
+            mainItemDao.deleteDetailsFromMain(mainItemId)
+        }
+    }
+
+    // create a view model factory that takes a MainItemDao and DetailItemDao as properties  and
+    // creates a ViewModel
+    class ListViewModelFactory(
+        private val mainItemDao: MainItemDao,
+        private val detailItemDao: DetailItemDao
+        ):
+        ViewModelProvider.Factory{
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(ListViewModel::class.java)) {
+                return ListViewModel(mainItemDao, detailItemDao) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
+        </code>
+    </pre>
+        <p>
+            Since we are displaying a list of <code>MainItem</code> and <code>DetailItem</code> in their respective
+            fragments, we must implement adaoter classes for both lists:
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-md-6 ">
+            <h3><code>MainAdapter</code></h3>
+            <pre>
+                <code>
+class MainAdapter(
+    private val onItemClick: (MainItem) -> Unit, private val onItemLongClick: (MainItem) -> Boolean
+) : ListAdapter<MainItem, MainAdapter.ViewHolder>(DiffCallback) {
+
+    companion object DiffCallback : DiffUtil.ItemCallback<MainItem>() {
+        override fun areItemsTheSame(oldItem: MainItem, newItem: MainItem): Boolean {
+            return oldItem.itemName == newItem.itemName
+        }
+
+        override fun areContentsTheSame(oldItem: MainItem, newItem: MainItem): Boolean {
+            return oldItem == newItem
+        }
+
+    }
+
+    class ViewHolder(private var binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: MainItem) {
+            binding.listItemText.text = item.itemName.toString()
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val viewHolder = ViewHolder(
+            ListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
+        viewHolder.itemView.setOnClickListener {
+            val position = viewHolder.adapterPosition
+            onItemClick(getItem(position))
+        }
+        viewHolder.itemView.setOnLongClickListener {
+            val position = viewHolder.adapterPosition
+            onItemLongClick(getItem(position))
+        }
+        return viewHolder
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div class="col-md-6 ">
+            <h3><code>DetailAdapter</code></h3>
+            <pre>
+                <code>
+class DetailAdapter(
+    private val onItemLongClick: (DetailItem) -> Boolean
+) : ListAdapter<DetailItem, DetailAdapter.ViewHolder>(DiffCallback) {
+
+    companion object DiffCallback : DiffUtil.ItemCallback<DetailItem>() {
+        override fun areItemsTheSame(oldItem: DetailItem, newItem: DetailItem): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: DetailItem, newItem: DetailItem): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    class ViewHolder(private var binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: DetailItem) {
+            binding.listItemText.text = item.detailItemName
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val viewHolder = ViewHolder(
+            ListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
+        viewHolder.itemView.setOnLongClickListener {
+            val position = viewHolder.adapterPosition
+            onItemLongClick(getItem(position))
+        }
+        return viewHolder
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div class="row">
+            <p>
+                The last step in our application is to define click listeners, navigation actions, and some additional
+                UI components
+                (<a href="https://developer.android.com/reference/android/app/AlertDialog">Alert Dialogs</a>
+                to confirm the deletion of existing items and receive text necessary to create new items)
+                that will work together to perform the expected behavior of our app:
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-md-6 ">
+                <h3><code>MainListFragment</code></h3>
+                <pre>
+                    <code>
+class MainListFragment : Fragment() {
+    private val viewModel: ListViewModel by activityViewModels {
+        ListViewModel.ListViewModelFactory(
+            (activity?.application as BaseApplication).database.mainItemDao(),
+            (activity?.application as BaseApplication).database.detailItemDao(),
+        )
+    }
+    private var _binding: FragmentMainListBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMainListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Add click listener to floating action button
+        binding.fabMain.setOnClickListener {
+            addListItem()
+        }
+        val recyclerView = binding.mainListView
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // lambda for click behavior
+        // navigate to appropriate detail list
+        val click = { mainItem: MainItem ->
+            val action =
+                MainListFragmentDirections.actionMainListFragmentToDetailListFragment(mainItem.id, mainItem.itemName!!)
+            findNavController().navigate(action)
+        }
+
+        // lambda for long click behavior
+        // delete longclicked item
+        val longClick = { item: MainItem ->
+            deleteListItem(item)
+        }
+
+        // MainAdapter takes params onClickListener and onLongClickListener
+        val adapter = MainAdapter(click, longClick)
+        recyclerView.adapter = adapter
+        viewModel.allMainItems.observe(this.viewLifecycleOwner) { items ->
+            items.let {
+                adapter.submitList(it)
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun addListItem() {
+        val input = EditText(activity)
+        input.hint = "Item name"
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        activity?.let {
+            val builder = AlertDialog.Builder(activity)
+            builder.apply {
+                setTitle("Add List Item")
+                setView(input)
+                setPositiveButton(
+                    "Add"
+                ) { _, _ ->
+                    val newItem = MainItem(itemName = input.text.toString())
+                    viewModel.addMainItem(newItem)
+                }
+                setNegativeButton(
+                    "Cancel"
+                ) { dialog, _ ->
+                    dialog.cancel()
+                }
+            }
+            builder.create()
+            builder.show()
+        }
+    }
+
+    private fun deleteListItem(item: MainItem): Boolean {
+        activity?.let {
+            val builder = AlertDialog.Builder(activity)
+            builder.apply {
+                setTitle("Delete ${item.itemName}?")
+                setPositiveButton(
+                    "Yes"
+                ) { _, _ ->
+                    viewModel.deleteMainItem(item)
+                    viewModel.deleteDetailsFromMain(item.id)
+                }
+                setNegativeButton(
+                    "Cancel"
+                ) { dialog, _ ->
+                    dialog.cancel()
+                }
+            }
+            builder.create()
+            builder.show()
+        }
+        return true
+    }
+}
+                    </code>
+                </pre>
+            </div>
+            <div class="col-md-6 ">
+                <h3><code>DetailListFragment</code></h3>
+                <pre>
+                    <code>
+class DetailListFragment : Fragment() {
+    private val viewModel: ListViewModel by activityViewModels {
+        ListViewModel.ListViewModelFactory(
+            (activity?.application as BaseApplication).database.mainItemDao(),
+            (activity?.application as BaseApplication).database.detailItemDao(),
+            )
+    }
+    private var _binding: FragmentDetailListBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var adapter: DetailAdapter
+    private val args: DetailListFragmentArgs by navArgs()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentDetailListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Add click listener to floating action button
+        binding.fabMain.setOnClickListener {
+            addListItem()
+        }
+        val recyclerView = binding.detailListView
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // lambda to define longClick behavior
+        val longClick = { detailItem: DetailItem ->
+            deleteListItem(detailItem)
+        }
+        adapter = DetailAdapter(longClick)
+        recyclerView.adapter = adapter
+        viewModel.getDetailItems(args.mainItemId).observe(this.viewLifecycleOwner) { items ->
+            items.let {
+                adapter.submitList(it)
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun addListItem() {
+        val input = EditText(activity)
+        input.hint = "Item name"
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        activity?.let {
+            val builder = AlertDialog.Builder(activity)
+            builder.apply {
+                setTitle("Add List Item")
+                setView(input)
+                setPositiveButton(
+                    "Add"
+                ) { _, _ ->
+                    viewModel.addDetailItem(args.mainItemId, input.text.toString())
+                }
+                setNegativeButton(
+                    "Cancel"
+                ) { dialog, _ ->
+                    dialog.cancel()
+                }
+            }
+            builder.create()
+            builder.show()
+        }
+    }
+
+    private fun deleteListItem(detailItem: DetailItem): Boolean {
+        activity?.let {
+            val builder = AlertDialog.Builder(activity)
+            builder.apply {
+                setTitle("Delete ${detailItem.detailItemName}?")
+                setPositiveButton(
+                    "Yes"
+                ) { _, _ ->
+                    viewModel.deleteDetailItem(detailItem)
+                    Log.d("deletion", "id was $detailItem")
+                }
+                setNegativeButton(
+                    "Cancel"
+                ) { dialog, _ ->
+                    dialog.cancel()
+                }
+            }
+            builder.create()
+            builder.show()
+        }
+        return true
+    }
+}
+                    </code>
+                </pre>
+            </div>
+        </div>
+        <div class="row">
+            <h3>Application Demonstration:</h3>
+            <p> See the link at the bottom of this page to install this application onto your own device</p>
+            <div class="pt-5"></div>
+            <div class="col-md-6">
+                <img src="images/ListMaker/main.png" alt="MainListFragment Screenshot" width="600">
+            </div>
+            <div class="col-md-6">
+                <img src="images/ListMaker/groceries.png" alt="DetailListFragment Screenshot" width="600">
+            </div>
         </div>
         <div class="pt-5"></div>
-    <div class="row">
+        <div class="pt-5"></div>
+        <div class="row">
+            <h3>Top Accomplishments:</h3>
+            <p>
+                I am most proud of
+            </p>
+            <div class="pt-5"></div>
+            <div class="pt-5"></div>
+        <div class="row">
         <div class="col-md-6 text-center">
             <h3>
                 <a href="https://github.com/harr1424/ListMaker">ListMaker</a>
@@ -1173,7 +1685,7 @@ interface MainItemDao {
                 <a href="https://pub.dev/packages/audio_service">background audio service</a>
                 in order to continuously play media.
             </p>
-            <img alt="Koradi App screenshot" class="mx-auto d-block" height="700" src="images/ListMaker/koradi.png"/>
+            <img alt="Koradi App screenshot" class="mx-auto d-block" height="700" src="images/koradi.png"/>
             <br>
             <a href='https://play.google.com/store/apps/details?id=com.koradi.radio&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
                style="display: inline; overflow: hidden; border-radius: 23px; width: 250px; height: 100px;"><img
