@@ -9,12 +9,32 @@
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
 
+
     <title>APIs and Cloud Computing</title>
 </head>
 <body>
 <div class="container">
     <div class="row ">
         <h1><a href="index.html">Home</a></h1>
+    </div>
+    <div class="pt-5"></div>
+    <div class="row">
+        <h1>Cloud Computing</h1>
+        <p>
+            As part of a graduate course in cloud computing, I worked with a group to develop a container testing service.
+            Many organizations host their web applications using containers (see below) that run on cloud infrastructure.
+            Our group determined that a service allowing organizations to test their containerized applications in a
+            simulated cloud based production environment would be met with enthusiasm. The service we would implement
+            would allow for for our clients to upload a container image to our infrastructure. Our service would then provision
+            the necessary resources to deploy and test this container. Almost immediately, we recognized that
+            providing such a service entailed exposing our infrastructure to abuse by malicious actors. For example
+            it would be trivial to upload a container intended to misuse our cloud infrastructure for the purpose of
+            mining monero or some other cryptocurrency, or to provision web hosting services in order to facilitate illegal
+            activity. We determined it would be necessary to thoroughly vet our clients and also to require them to
+            register an account with us before using our service. My contribution to this project was to create an
+            authentication <a href="https://en.wikipedia.org/wiki/Microservices">microservice</a> that would be used to
+            authenticate our clients before they could access our service.
+        </p>
     </div>
     <div class="pt-5"></div>
     <div class="row">
@@ -102,7 +122,196 @@ CMD [ "uvicorn", "main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "
     </div>
     <div class="pt-5"></div>
     <div class="row">
-        <h1>Project Assignment</h1>
+        <h1>Developing a backend authentication API</h1>
+        <p>
+            I have used <a href="https://fastapi.tiangolo.com/">FastAPI</a> to implement the back-end logic required
+            for performing authentication. I've chosen FastAPI over competing API frameworks because I was very impressed
+            with the documentation provided by FastAPI. Not only where the getting started tutorials on their website
+            excellent, but within the API itself once can navigate to a built in <code>/docs</code> endpoint and
+            interact with the various endpoints contained within the API (This will be demonstrated below). Let's take a
+            look at our API implementation, it is very straightforward:
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+      <pre>
+        <code>
+import hashlib
+import hmac
+import os
+from typing import Tuple
+import boto3
+import uvicorn
+from fastapi import FastAPI, Form
+
+app = FastAPI()
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('clients')
+        </code>
+    </pre>
+    </div>
+        <div class="col-md-6">
+            <ul>
+                <li>
+                    After adding the necessary import statements, we initialize our FastAPI instance to a variable
+                    <code>app</code> and also initialize variables used to access an AWS DynamoDB table that will be
+                    used to store client credentials
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <pre>
+                <code>
+def hash_new_password(password: str) -> Tuple[bytes, bytes]:
+    """
+    Hash the provided password with a randomly-generated salt,
+    encode as base64, and return the salt and hash for storage.
+    """
+    salt = os.urandom(64)
+    hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)
+    return salt, hashed_password
+
+
+def is_correct_password(salt: bytes, hashed_password: bytes, password: str) -> bool:
+    """
+    Given a previously-stored salt/hash and a password in a current
+    authentication attempt check whether the password is correct.
+    """
+    return hmac.compare_digest(
+        hashed_password,
+        hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)
+    )
+                </code>
+            </pre>
+    </div>
+        <div class="col-md-6">
+            <ul>
+                <li>
+                    Next, two helper functions are defined that will be used for authentication
+                </li>
+                <li>
+                    <code>hash_new_password()</code> accepts as an argument a string corresponding to a password
+                    provided by the client during the registration process.
+                </li>
+                <li>
+                    The password is
+                    <a href="https://en.wikipedia.org/wiki/Rainbow_table#Defense_against_rainbow_tables">salted</a>
+                    to increase entropy during hashing and mitigate
+                    <a href="https://en.wikipedia.org/wiki/Rainbow_table">rainbow table</a> attacks.
+                </li>
+                <li>
+                    After salting, the password is hashed successively, in this case 10,000 times, and the resulting
+                    hash as well as the salt used are returned by the function. <br><br><br><br>
+                </li>
+                <li>
+                    <code>is_correct_password()</code> accepts three arguemnts:
+                    <ol>
+                        <li>
+                            A salt that was used to hash a client provided password
+                        </li>
+                        <li>
+                            A hash of the same client provided password
+                        </li>
+                        <li>
+                            A new password (unhashed) that is being provided in an authentication attempt
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    This function will repeat the hashing process defined in <code>hash_new_password()</code>
+                    using the previously stored salt, and if the resulting hash matches the stored hash, the password
+                    can be considered correct.
+                </li>
+            </ul>
+        </div>
+    </div>
+    <h5>The remainder of the API implementation involves defining endpoints and how they should behave:</h5>
+    <div class="row">
+        <div class="col-md-6">
+            <pre>
+                <code>
+@app.post("/register/")
+async def register(username: str = Form(...), password: str = Form(...)):
+    """
+    Accepts an email address and password as parameters, calls hash_new_password in order
+    to hash and salt the password and then stores the email, salt, and hashed password in a
+    DynamoDB table.
+    :param username:
+    :param password:
+    :return:
+    """
+    salt, hashed_password = hash_new_password(password)
+    table.put_item(
+        Item= {
+            'email': username,
+            'salt': salt,
+            'password': hashed_password
+        }
+    )
+    return {f"Success! {username} has been registered."}
+
+
+@app.post("/authenticate/")
+async def authenticate(username: str = Form(...), password: str = Form(...)):
+    """
+    Accepts a previously registered email and password combination, if valid this function
+    will return redirect to API root after setting a session cookie.
+    :param username:
+    :param password:
+    :return:
+    """
+    try:
+        response = table.get_item(Key={'email': username})
+        item = response['Item']
+        stored_salt = item['salt'].value
+        stored_password = item['password'].value
+        return is_correct_password(stored_salt, stored_password, password)
+    except KeyError:
+        return "The email you entered has not been registered."
+
+
+@app.post("/authenticate_no_form/")
+async def authenticate_no_form(username: str, password: str):
+    """
+    Accepts a previously registered email and password combination, if valid this function
+    will return redirect to API root after setting a session cookie.
+    :param username:
+    :param password:
+    :return:
+    """
+    try:
+        response = table.get_item(Key={'email': username})
+        item = response['Item']
+        stored_salt = item['salt'].value
+        stored_password = item['password'].value
+        return is_correct_password(stored_salt, stored_password, password)
+    except KeyError:
+        return "The email you entered has not been registered."
+
+if __name__ == '__main__':
+    uvicorn.run("main:app", host='localhost', port=5555, reload=True)
+                </code>
+            </pre>
+        </div>
+        <div class="col-md-6">
+            <ul>
+                <li>
+                    In FastAPI endpoints are defined using the annotation pattern
+                    <code>@&lt;app_name&gt;.&lt;HTTP_request_type&gt;(/"&lt;path_to_endpoint&gt;")</code>
+                </li>
+                <li>
+                    This means API consumers can access the endpoint by navigating to the base url followed by the
+                    endpoints path, i.e. <code>authenticator_api.dev/register/</code>
+                </li>
+                <li>
+                    The <code>register</code> endpoint uses the helper function <code>hash_new_password()</code>
+                    in irder to obtain a salt and hashed password provided during a registration attempt. These values
+                    will be stored as a DynamoDB table row where the client email serves as a primary key
+                </li>
+            </ul>
+        </div>
     </div>
 
 </div>
