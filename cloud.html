@@ -9,7 +9,7 @@
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
 
-    <title>Honorable Mentions</title>
+    <title>APIs and Cloud Computing</title>
 </head>
 <body>
 <div class="container">
@@ -18,8 +18,93 @@
     </div>
     <div class="pt-5"></div>
     <div class="row">
-        <h1>Under Construction</h1>
+        <h1>What is an API?</h1>
+        <p>
+            Generally speaking, an API is a software intermediary that allows two applications to talk to each other.
+            For example, if you are using your phone and want to access a YouTube video your phone will communicate with
+            the YouTube servers using an intermediary API that takes your phone’s request, retrieves the data from
+            YouTube’s servers, and returns it to your device.
+            An API also adds a layer of security by ensuring that the two devices only access each other through a
+            predefined intermediary. However, APIs can actually be security flaws if the access to the API is not
+            properly controlled and have been for websites such as Facebook.
+            Modern APIs often rely on standards (such as HTTP or REST) which are friendly to developers and widely
+            understood.
+        </p>
+        <p>
+            The functional unit of an API is known as an <i>endpoint</i>. Endpoints can be implemented to perform specific
+            functions. Imagine an API that is contacted in order to retrieve up-to-date weather information.
+            One endpoint may return jSON data describing a weather forecast and another endpoint may return current weather
+            information. Most APIs are contacted via the public internet, and in such cases the API is accessed
+            at it's <i>base url</i>. For example, the United States National Weather Service provides a free and
+            public API providing weather information at the base address <a href="https://api.weather.gov">https://api.weather.gov</a>.
+            Navigating to this link in a web browser or requesting the page via cURL or similar command line tool will
+            return a message informing the API consumer of the APIs status. Specific endpoints can be accessed by
+            appending to the <i>base url</i>. For example, <a href="https://api.weather.gov/alerts">https://api.weather.gov/alerts</a>
+             returns a list of all current weather alerts in the United States.
+        </p>
+        <p>
+            Frequently, APIs
+            are run in <a href="https://www.docker.com/resources/what-container/">Docker containers</a> which allows them to
+            be highly portable (able to operate on a wide variety of infrastructure across various operating systems) and
+            also highly efficient (operate on as little computing resources as possible). A developer is able to write
+            a recipe describing a particular container using a <a href="https://docs.docker.com/engine/reference/builder/">dockerfile</a>.
+            The example below demonstrates the specification necessary to run an API accessing Amazon Web Services (AWS)
+            resources. This dockerfile will be used to contain the API examined in depth on this page:
+        </p>
+        <div class="col-md-6">
+            <pre>
+                <code>
+FROM python:3.8-slim-buster
+WORKDIR /app
+ENV AWS_DEFAULT_REGION=us-west-2
+ENV AWS_ACCESS_KEY_ID="REDACTED"
+ENV AWS_SECRET_ACCESS_KEY="REDACTED/3i"
+COPY ./requirements.txt /app/requirements.txt
+COPY ./main.py /app/main.py
+RUN pip3 install --no-cache-dir --upgrade -r /app/requirements.txt
+EXPOSE 5555
+CMD [ "uvicorn", "main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "5555" ]
+                </code>
+            </pre>
+        </div>
+        <div class="col-md-6">
+            <ul>
+                <li>
+                    The <code>FROM</code> instruction specifies a parent image to install onto the container, in
+                    this case a variant of Debian Buster that contains the minimal dependencies (slim) required to run
+                    Python 3.8.
+                </li>
+                <li>
+                    The <code>WORKDIR</code> instruction sets thr working directory for any subsequent <code>RUN</code>
+                    commands
+                </li>
+                <li>
+                    Environment variables can be specified using the <code>ENV</code> instruction. In this case, such
+                    environment variables are credentials to access AWS resources and have thus been redacted
+                </li>
+                <li>
+                    The <code>COPY</code> instruction has been used here to copy files from the local machine into the
+                    container
+                </li>
+                <li>
+                    The <code>RUN</code> instruction is used to execute a command that will install packages required
+                    by the API
+                </li>
+                <li>
+                    The <code>EXPOSE</code> instruction is used to instruct the container to listen on a specific port
+                    at runtime
+                </li>
+                <li>
+                    The <code>CMD</code> instruction specifies a command to execute once runtime begins
+                </li>
+            </ul>
+        </div>
     </div>
+    <div class="pt-5"></div>
+    <div class="row">
+        <h1>Project Assignment</h1>
+    </div>
+
 </div>
 
 
