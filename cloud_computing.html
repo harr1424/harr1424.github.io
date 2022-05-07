@@ -124,8 +124,71 @@ CMD [ "uvicorn", "main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "
     <div class="row">
         <h1>Creating a DynamoDB table using Terraform</h1>
         <p>
-            <a href="https://www.terraform.io/">Terraform</a> is
+            <a href="https://www.terraform.io/">Terraform</a> is an
+            <a href="https://en.wikipedia.org/wiki/Infrastructure_as_code">infrastructure as code</a> platform
+            that allows cloud developers to provision infrastructure using machine and human readable files
+            written in a declarative syntax. The code below demonstrates how this is done and assumes that both
+            the Terraform and Amazon Web Services CLI have been installed on a local computer:
         </p>
+        <div class="col-md-6">
+            <pre>
+                <code>
+provider "aws" {
+  region = "us-west-2"
+}
+
+resource "aws_dynamodb_table" "clients" {
+  name           = "clients"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 1
+  write_capacity = 1
+  hash_key       = "email"
+
+  attribute {
+    name = "email"
+    type = "S"
+  }
+
+  tags = {
+    Name        = "dynamodb-table-1"
+    Environment = "production"
+  }
+}
+                </code>
+            </pre>
+        </div>
+        <div class="col-md-6">
+            <ul>
+                <li>
+                    A provider block is declared to inform the Terraform interpreter that Amazon Web Services (AWS)
+                    will be used in order to provision resources
+                </li>
+                <li>
+                    A resource definition block specifies a resource type <code>aws_dynamodb_table</code>
+                     and name <code>clients</code>
+                </li>
+                <li>
+                    The <code>aws_dynamodb_table</code> contains mandatory and optional attributes that are defined
+                </li>
+                <li>
+                    Of note is the <code>hash_key</code> attribute which sets the primary key for the table to a client's
+                    provided email address
+                </li>
+                <li>
+                    The <code>hash_key</code> attribute must then be specified to be of type string
+                </li>
+                <li>
+                    Unlike SQL, DynamoDB tables don't require all columns to be defined at table creation
+                </li>
+                <li>
+                    New columns will be automatically created when objects containing such fields are inserted into the table
+                     (See the <code>register</code> endpoint in the following section to get a better idea of how this works)
+                </li>
+                <li>
+                    <code>tags</code> can be useful when a Terraform configuration file contains a large quantity
+                    of resources
+                </li>
+            </ul>
     </div>
     <div class="pt-5"></div>
     <div class="row">
@@ -458,7 +521,10 @@ CMD [ "nginx", "-g", "daemon off;"]
     that allows for easily configuring web servers. In this case, the web server has the very simple task of serving
     a visitor with a static HTML page.
 </p>
-
+</div>
+<div class="pt-5"></div>
+<div class="row">
+    <h1>Using Docker Compose, ECS, and Amazon Cloud Formation to deploy the authentication microservice</h1>
 
 
 </div>
