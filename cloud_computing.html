@@ -524,7 +524,181 @@ CMD [ "nginx", "-g", "daemon off;"]
 </div>
 <div class="pt-5"></div>
 <div class="row">
-    <h1>Using Docker Compose, ECS, and Amazon Cloud Formation to deploy the authentication microservice</h1>
+    <h1>Deploying with Docker and Amazon ECS</h1>
+    <p>
+        We have succesively implemented all the individual components of our microservice, and testing has confirmed
+        that everything is working as expected. Now it is time to deploy our microservice to cloud infrastructure
+        where our clients and the main project API can access it via the public internet. For this, I decided to use
+        <a href="https://docs.docker.com/cloud/ecs-integration/">Docker Compose and ECS</a>. Docker Compose allows
+        multiple containers to be configured and also provides the ability to define components shared between them.
+        Amazon's
+        <a href="https://aws.amazon.com/ecs/">Elastic Container Service</a> (ECS) is a container orchestration
+        service that makes it easy to deploy, manage, and scale containerized applications.
+        <a href="https://aws.amazon.com/cloudformation/">Amazon Cloud Formation</a> is similar to Terraform in that
+        it uses a declarative file to provision cloud infrastructure. The <code>docker-compose.yml</code> file
+        showen below will be converted into an Amzon Cloud Formation template in order to provision the additional
+        resources needed to deploy and interface the two containers described:
+    </p>
+    <div class="col-md-6">
+        <pre>
+            <code>
+version: "3.8"
+
+x-aws-loadbalancer: "arn:aws:elasticloadbalancing:us-west-2:877048740243:loadbalancer/app/auth/450268cab678f752"
+
+services:
+  fastapi:
+    image: harr1424/auth:FastAPI
+    x-aws-pull_credentials: "arn:aws:secretsmanager:REDACTED"
+    build: FastAPI
+    ports:
+      - target: 5555
+        x-aws-protocol: http
+
+  nginx:
+    image: harr1424/auth:nginx
+    x-aws-pull_credentials: "arn:aws:secretsmanager:REDACTED"
+    build: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - fastapi
+
+networks:
+  default:
+    external: true
+    name: sg-01af30133ec33c737
+            </code>
+        </pre>
+    </div>
+    <div class="col-md-6">
+        <ul>
+            <li>
+                <a href="https://docs.docker.com/compose/">Docker Compose</a>
+                allows for <code>x-aws</code> fields to be declared which correspond to AWS resources
+            </li>
+            <li>
+                <code>x-aws-loadbalancer</code> is declared here but was provisioned manually via the AWS console. Creating
+                a load balancer allowed for the authentication API to have a static IP address at which it could be
+                accessed via the public internet <br><br>
+            </li>
+            <li>
+                The <code>services</code> block allows for the containerized applications defined in previous
+                dockerfiles to be built and defines port mapping <br><br>
+            </li>
+            <li>
+                It is worth noting that Docker Compose does not allow for building images stored on a local machine,
+                rather the images specified in <code>docker-compose.yml</code> must be pulled from a container
+                repository <br><br>
+            </li>
+            <li>
+                This is why the field <code>x-aws-pull_credentials</code> has been defined <br><br>
+            </li>
+            <li>
+                The <code>networks</code> block defines how the two services will interface with each other <br><br>
+            </li>
+            <li>
+                <code>sg-01af30133ec33c737</code> specifies a security group that governs the load balancer and the
+                services defined in this file <br><br>
+            </li>
+        </ul>
+    </div>
+    <p>
+        Having pushed our container images to a remote repository and completed our <code>docker-compose.yml</code>
+        file, we now need only to configure an AWS context for Docker and then run <code>docker compose up</code> and
+        our containerized applications and all required resources will be provisioned.
+    </p>
+    </div>
+<div class="pt-5"></div>
+    <div class="row">
+        <h1>Integrating the authentication microservice with the main project API</h1>
+        <p>
+            Now that our authentication microservice is up and running, we can request our clients register for an
+            account and provide these credentials before using our services. Integrating the authentication
+            microservice was fairly straightforward and is described below:
+        </p>
+        <div class="col-md-6">
+            <pre>
+                <code>
+# Contact the authentication API via static load balancer
+auth_url = "http://auth-852092430.us-west-2.elb.amazonaws.com:5555/authenticate_no_form/"
+
+
+# Function to authenticate a client, requires username and password as string args
+def auth(username: str, password: str):
+    headers = {
+        'accept': 'application/json',
+        'content-type': 'application/x-www-form-urlencoded',
+    }
+    params = {
+        'username': username,
+        'password': password,
+    }
+    response = requests.post(auth_url, headers=headers, params=params)
+    return response.json()
+
+@app.post("/upload")
+async def upload_file(file: UploadFile, username: str, password: str):
+    """
+    Uploads a docker image to S3
+    """
+    if str((auth(username, password))) == "True":
+        # Generate a unique ID for the file
+        img_id = uuid4().hex
+
+        # Write the file to a byte stream
+        bytestream = io.BytesIO(file.file.read())
+
+        # Upload the file to S3 in byte chunks
+        s3_client.upload_fileobj(bytestream, "umt-client-uploads", f"{img_id}.tar")
+
+        return {"ID": img_id}
+
+    else:
+        return "Invalid Credentials"
+                </code>
+            </pre>
+        </div>
+        <div class="col-md-6">
+            <br>
+            <ul>
+                <li>
+                    A variable is set to hold a string containing the URL of the authentication endpoint to be contacted
+                    <br><br>
+                </li>
+                <li>
+                    A function is defined that will accept a username and password, pass these values to the
+                    authentication endpoint, and return a JSON response
+                    <br><br>
+                </li>
+                <li>
+                    If the JSON response is <code>true</code> the authentication attempt succeeds
+                    <br><br>
+                </li>
+                <li>
+                    It was necessary to use the <code>requests</code> library in python to form an appropriate request
+                    to the endpoint containing the username and password provided by the client
+                    <br><br><br><br><br><br>
+                </li>
+                <li>
+                    The <code>upload</code> endpoint in our main project API demonstrates how the authentication
+                    service will be used
+                    <br><br>
+                </li>
+                <li>
+                    In addition to a file parameter a client must also provide their username and password
+                    <br><br>
+                </li>
+                <li>
+                    The values of the provided username and password will be used to either return a successful
+                    authentication response and execute the file upload or else display a message informing the
+                    client that their credentials are invalid
+                </li>
+            </ul>
+        </div>
+        </div>
+
+
 
 
 </div>
