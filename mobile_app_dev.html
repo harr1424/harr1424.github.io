@@ -31,10 +31,10 @@
             <br>
             <h3>What I've Learned: Application Fundamentals</h3>
             <p>
-                Android development has been an excellent way to get hands on practice writing clean code and
+                Android development has been an excellent way to get hands-on practice writing clean code and
                 to work with software architecture patterns commonly found in industry applications,
                 especially <i>model-view-viewmodel (
-                <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel">MVMM</a></i>) which is
+                <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel">MVVM</a></i>) which is
                 <a href="https://developer.android.com/jetpack/guide">endorsed</a> as a best practice
                 when building Android apps.
             </p>
@@ -47,15 +47,15 @@
                 destroyed when the OS decides to remove the app's process from memory.
             </I></blockquote>
             <p>
-                This effectively separates the application into two layers: a user-interface (UI) layer, and
+                This effectively separates the application into two layers: a user-interface (UI) layer and
                 a data layer. This concept is just one example of various design principles that I learned while
                 exploring mobile application development.
             </p>
             <p>
-                While Android applications have historically been written in Java Google announced in May 2019
-                that the officially supported language for Android development would be
+                While Android applications have historically been written in Java, Google announced in May 2019
+                that the officially-supported language for Android development would be
                 <a href="https://en.wikipedia.org/wiki/Kotlin_(programming_language)">Kotlin</a>.
-                Kotlin has much in common with Java but its syntax has been changed to support type inference and
+                Kotlin has much in common with Java, but its syntax has been changed to support type inference and
                 eliminate the terminating semicolons, among many other features such as inline lambda functions,
                 null safety, range expressions, and coroutines, all of which were explored in depth in the
                 <a href="https://developer.android.com/courses/android-basics-kotlin/course">training course</a>.
@@ -64,18 +64,18 @@
                 This course also emphasised the importance of testing application code, and each module contained an
                 activity related to writing effective unit and functional tests.
                 After teaching foundational concepts such as user interface (UI) management using layout resource files,
-                click listeners, etc. the course demonstrated how to implement a
+                click listeners, etc, the course demonstrated how to implement a
                 <a href="https://developer.android.com/guide/topics/ui/layout/recyclerview">Recycler View</a>.
                 Recycler Views are the component inside of Android applications that allow for an infinitely scrollable
                 list.
                 Think of any 'feed' you have encountered such as news feed on LinkedIn or Twitter, and you have the
-                idea..
+                idea.
                 Recycler Views have been designed to provide a user-friendly
                 experience by scrolling smoothly and not freezing or jerking as fresh list items are loaded into the
                 list.
             </p>
             <p>
-                THe following is a code snippet from my application <i>ListMaker</i> which demonstrates the use of a
+                The following is a code snippet from my application <i>ListMaker</i> which demonstrates the use of a
                 Recycler View. Its individual components will be explained below:
             </p>
         </div>
@@ -136,7 +136,7 @@ class MainAdapter(
             <ul>
                 <li>
                     The <i>MainAdapter</i> class constructor expects as arguments two click listeners that determine
-                    what occurs if a list item is clicked or long-clicked respectively and extends the
+                    what occurs if a list item is clicked or long-clicked, respectively, and extends the
                     <i>ListAdapter</i>
                     class which expects a <i>DifCallback</i> object as an argument.
                 </li>
@@ -146,14 +146,14 @@ class MainAdapter(
                 <li>
                     <i>DiffCallback</i> is a class that contains methods for computing the difference between two lists
                     and is useful to detect when only one or a few list elements have changed, and update only those
-                    elements as opposed to the entire list. Here <i>DiffCallback</i> is implemented as a
+                    elements, as opposed to the entire list. Here <i>DiffCallback</i> is implemented as a
                     <a href="https://kotlinlang.org/docs/object-declarations.html#companion-objects">companion
                         object</a>.
                 </li>
                 <li>
                     A companion object is an example of the <a href="https://en.wikipedia.org/wiki/Singleton_pattern">Singleton
                     design pattern</a>
-                    and also resemble static objects in Java in the sense that they belong to a specific class but not
+                    and also resembles static objects in Java in the sense that they belong to a specific class but not
                     a given instance of that class.
                 </li>
                 <li>
@@ -171,14 +171,14 @@ class MainAdapter(
                     <code>ListItem</code> view.
                 </li>
                 <li>
-                    Additionally two click listeners are set within <code>onCreateViewHolder</code>. Additionally
+                    Additionally, two click listeners are set within <code>onCreateViewHolder</code>. Additionally
                     listeners can be set here as well that handle the application's response to specific gestures
                     or other events.
                 </li>
                 <li>
                     Lastly, the <code>onBindViewHolder</code> function is responsible for performing the work defined
                     in <code>onCreateViewHolder</code> and therefore also any work defined in the <code>bind</code>
-                    function in the <code>ViewHolder</code> constructor. In this case this entails setting a
+                    function in the <code>ViewHolder</code> constructor. In this case, this entails setting a
                     <code>ListItem</code>'s text field to the appropriate item's name and setting two click listeners.
                 </li>
             </ul>
@@ -207,9 +207,9 @@ class MainAdapter(
                     Android applications have their programmatic entry point located in a <code>MainActivity</code>
                     class (this can be modified in the <code>AndroidManifest.xml</code> file, but changing this doesn't
                     appear to be a common practice). Within <code>MainActivity</code> we can initialize a
-                    <code>NavHostFragment</code> which is a fragment that will be used to display the views contained
-                    within our app. This fragment is owned by the <code>NavHost</code>, which contains the conext
-                    for naviagting using a <code>NavController</code>. We also initialize this
+                    <code>NavHostFragment</code>, which is a fragment that will be used to display the views contained
+                    within our app. This fragment is owned by the <code>NavHost</code>, which contains the context
+                    for navigating using a <code>NavController</code>. We also initialize this
                     <code>NavController</code>
                     within <code>MainActivity</code>. These steps are demonstrated in the code below:
                     <pre>
@@ -329,8 +329,8 @@ class StartOrderFragment : Fragment() {
             <p>
                 These steps demonstrate the implementation of code directly related to the Navigation Component, but it
                 is
-                worth noting that additional steps are necessary such as placing a <code>FragmentContainerView</code>
-                inside the <code>MainActivity</code> layout file as well as defining the layout files for each
+                worth noting that additional steps are necessary, such as placing a <code>FragmentContainerView</code>
+                inside the <code>MainActivity</code> layout file, as well as defining the layout files for each
                 individual fragment. (This app also makes use of a <code>ViewModel</code>, but this will be discussed
                 in another section). Once all this has been finished, we can navigate through the application as
                 demonstrated below:
@@ -360,7 +360,7 @@ class StartOrderFragment : Fragment() {
         <div class="col-md-4 text-center my-auto">
             <p>
                 Clicking the back arrow located in the AppBar at the top of the screen will result in a navigation
-                action that displays the previosuly shown fragment.
+                action that displays the previously shown fragment.
             </p>
         </div>
     </div>
@@ -374,13 +374,13 @@ class StartOrderFragment : Fragment() {
                 is used to store application data in a way that respects the Android application
                 <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">lifecycle</a>.
                 If data were to be stored local to a given activity or fragment, this data could be lost for any number
-                of reasons out of the control of the application user or programmer such as rotating the device screen,
-                the operating system re-allocating memory resources, and the activity or fragment loosing focus.
+                of reasons out of the control of the application user or programmer, such as rotating the device screen,
+                the operating system re-allocating memory resources, and the activity or fragment losing focus.
                 Additionally, ViewModels simplify the process of sharing data between fragments. Separating application
                 data from the user-interface is a common pattern in commercial codebases.
             </p>
             <p>
-                To explore the implementation of a ViewModel I have copied code from my solution to the
+                To explore the implementation of a ViewModel, I have copied code from my solution to the
                 <a href="https://developer.android.com/codelabs/basic-android-kotlin-training-shared-viewmodel#0">Cupcake</a>
                 codelab.
                 Implementing a ViewModel within an application begins by simply declaring a new class that
@@ -391,8 +391,8 @@ class OrderViewModel : ViewModel() { }
             </code>
         </pre>
             <p>
-                Next we define fields for our <code>OrderViewModel</code> class. There is a convention when doing this
-                in Kotlin termed the <i>backing property</i> which holds that a mutable private variable is accessed
+                Next, we define fields for our <code>OrderViewModel</code> class. There is a convention when doing this
+                in Kotlin termed the <i>backing property</i>, which holds that a mutable private variable is accessed
                 by any functions within the <code>OrderViewModel</code> class and an immutable public variable is then
                 provided for other classes
                 to access. This is similar in theory to using getters and setters in Java. The example below uses
@@ -482,7 +482,7 @@ class StartFragment : Fragment() {
                 <li>
                     <code>activityViewModels()</code> is called to return access to an <code>OrderViewModel</code>
                     instance shared between all fragments in the activity. The reference to this instance
-                    is declared in a variable <code>sharedViewModel</code>
+                    is declared in a variable <code>sharedViewModel</code>.
                 </li>
                 <li>
                     The methods defined in <code>OrderViewModel</code> can be accessed in order to update the value
@@ -502,7 +502,7 @@ class StartFragment : Fragment() {
             <h3>What I've Learned: Retrieving Data from the Internet</h3>
             <p>
                 Most mobile applications perform network requests in order to retrieve and display information to
-                their users such as emails, videos, and in the example for this section weather alerts. Android
+                their users such as emails, videos, and in the example for this section, weather alerts. Android
                 recommends
                 reforming this work on a background thread since network requests can take a significant amount of time
                 to complete. Performing network requests on the <i>main thread</i>, also known as the <i>UI thread</i>
@@ -512,8 +512,8 @@ class StartFragment : Fragment() {
                 requests on a background thread in order to avoid the application appearing to freeze while the network
                 request
                 is handled. This situation is the basis of
-                <a href="https://en.wikipedia.org/wiki/Asynchrony_(computer_programming)">asynchronus programming</a>.
-                Additionally, Android recommends segregating application code relating to netowrk requests within its
+                <a href="https://en.wikipedia.org/wiki/Asynchrony_(computer_programming)">asynchronous programming</a>.
+                Additionally, Android recommends segregating application code relating to network requests within its
                 own package, a practice which adheres to the
                 <a href="https://en.wikipedia.org/wiki/Modular_programming">modular design</a> technique. In the example
                 below,
@@ -561,19 +561,19 @@ object Alerts {
                     First, we declare a reference to a <code>BASE_URL</code> which will simplify our API calls.
                 </li>
                 <li>
-                    Next we create a
+                    Next, we create a
                     <a href="https://github.com/square/moshi">Moshi</a> object which will be used to deserialize the
-                    JSON we receive from the API endpoint into Kotlin data classes (we must still declare these classes,
-                    this will be demonstrated in the next section)
+                    JSON we receive from the API endpoint into Kotlin data classes (we must still declare these classes;
+                    this will be demonstrated in the next section).
                 </li>
                 <li>
-                    Next we must also define a
+                    Next, we must also define a
                     <a href="https://square.github.io/retrofit/">RetroFit</a> object responsible for converting the
-                    API HTTP response into an interface
+                    API HTTP response into an interface.
                 </li>
                 <li>
                     With our RetroFit object declared, we can now implement the interface which describes our API call.
-                    In this case we perform an HTTP request to a particular endpoint that will return weather alerts for
+                    In this case, we perform an HTTP request to a particular endpoint that will return weather alerts for
                     Missoula County, Montana. The interface describes what the API call will do: return an Alert object,
                     and the next step maps this HTTP request to a function
                     <code>getAlerts()</code> that can be called from within our application code, specifically our
@@ -758,7 +758,7 @@ data class Parameter(
         </code>
     </pre>
         <p>
-            Now that we have created classes (for each JSON array) and fields (for each JSON object) we can begin to
+            Now that we have created classes (for each JSON array) and fields (for each JSON object), we can begin to
             work with the data returned by the API:
         </p>
     </div>
@@ -807,23 +807,23 @@ class AlertViewModel : ViewModel() {
             <ul>
                 <li>
                     We can declare an <code>enum</code> class that contains the three possible states of our network
-                    request: <code>LOADING, ERROR, DONE</code>
+                    request: <code>LOADING, ERROR, DONE</code>.
                 </li>
                 <li>
                     We declare fields (using the backing property described in the previous section) to hold the value
-                    of both the network request status and the API response
+                    of both the network request status and the API response.
                 </li>
                 <li>
                     The function <code>getAlerts()</code> launches a <code>coroutine</code> (discussed below) that
-                    will avoid making any asynchronous requests on the main UI thread
+                    will avoid making any asynchronous requests on the main UI thread.
                 </li>
                 <li>
                     If the request is successful, we can access the <code>Alert</code> object via our
-                    <code>AlertViewModel</code>
+                    <code>AlertViewModel</code>.
                 </li>
                 <li>
                     If any errors occur, the UI will display an error icon and we can examine application logs
-                    in order to troubleshoot
+                    in order to troubleshoot.
                 </li>
             </ul>
 
@@ -834,11 +834,11 @@ class AlertViewModel : ViewModel() {
             We performed our network request on a background thread by launching a
             <a href="https://kotlinlang.org/docs/coroutines-overview.html">coroutine</a> from the
             <a href="https://developer.android.com/kotlin/coroutines">ViewModel Scope</a>. This ensures that
-            no matter how long the request takes to complete our UI will not appear to freeze.
+            no matter how long the request takes to complete, our UI will not appear to freeze.
         </p>
 
         <p>
-            Next it is necessary to define two binding adapters that describe how the data stored in
+            Next, it is necessary to define two binding adapters that describe how the data stored in
             <code>AlertViewModel</code> will be displayed:
         </p>
     </div>
@@ -926,7 +926,7 @@ fun bindRecyclerView(recyclerView: RecyclerView,
                 <li>
                     The second binding adapter defines how the <code>Alert</code> data we are interested in will be
                     passed to the <code>RecyclerView</code>. For this, we need to create an <code>AlertAdapter</code>
-                    class and also define an <code>alert_item.xml</code> layout file, which will be shown below
+                    class and also define an <code>alert_item.xml</code> layout file, which will be shown below.
                 </li>
             </ul>
         </div>
@@ -1037,13 +1037,13 @@ class AlertAdapter :
                 accomplish this. This section demonstrates how a simple list application or note-taking application
                 can be created. This application allows users to create a list of main items where each main item can
                 be considered a task category. Clicking on a main item navigates to a list of items grouped as
-                children of the main item. For example a main item 'grocery' may be clicked to display a list of
+                children of the main item. For example, a main item 'grocery' may be clicked to display a list of
                 grocery items such as 'milk', 'eggs', and 'cheese'. This app is my original work and is available on the
                 <a href="https://play.google.com/store/apps/details?id=com.harr1424.listmaker&hl=en_US&gl=US">Google
                     Play Store</a>.
             </p>
             <p>
-                First we must define a <code>Data Entity</code> which describes a database table using SQL conventions:
+                First, we must define a <code>Data Entity</code>, which describes a database table using SQL conventions:
             </p>
         </div>
     </div>
@@ -1070,7 +1070,7 @@ data class DetailItem(
             <ul>
                 <li>
                     The <code>MainItem</code> data class will be used to create a table containing main items
-                    and contains only two columns: a unique id identifying the main item and the main item's name
+                    and contains only two columns: a unique id identifying the main item and the main item's name.
                 </li>
                 <li>
                     The <code>DetailItem</code> data class will be used to create a table containing detail items
@@ -1084,9 +1084,9 @@ data class DetailItem(
     <div class="pt-5"></div>
     <div class="row">
         <p>
-            Next, we declare a <code>Data Access Object</code> (DAO) which is just an interface describing what
+            Next, we declare a <code>Data Access Object</code> (DAO), which is just an interface describing what
             operations can be performed on a database table and what this operation will return. The Room library
-            provides three DAO operations anytime a DAO is declared: insert, delete, and update. All other table
+            provides three DAO operations anytime a DAO is declared: insert, delete and update. All other table
             operations must be explicitly defined:
         </p>
         <div class="col-md-6 ">
@@ -1122,12 +1122,12 @@ interface MainItemDao {
             <ul>
                 <li>
                     The <code>getAll()</code> function corresponds to a SQL query that will return all main items
-                    sorted in the order that they were added to the list
+                    sorted in the order that they were added to the list.
                 </li>
                 <li>
-                    The <code>getById()</code> functions corresponds to a SQL query that will return the item matching
+                    The <code>getById()</code> function corresponds to a SQL query that will return the item matching
                     the id passed to the function as an argument. This will be useful when adding click listeners to
-                    each main item in order to define navigation to their detail item list
+                    each main item in order to define navigation to their detail item list.
                 </li>
                 <li>
                     The <code>findByName()</code> function isn't currently used in this application, but I defined it
@@ -1135,17 +1135,17 @@ interface MainItemDao {
                 </li>
                 <li>
                     the <code>deleteDetailsFromMain()</code> function will delete all detail items should their parent
-                    main item be deleted by the user
+                    main item be deleted by the user.
                 </li>
                 <li>
                     The <code>insert()</code> function has been modified such that if a main item exists already,
-                    a duplicate will be ignored
+                    a duplicate will be ignored.
                 </li>
                 <li>
                     Notice that when function return types are specified above they are wrapped in a
                     <a href="https://developer.android.com/kotlin/flow">Flow</a> type which allows for these values to
                     be
-                    continuously updated
+                    continuously updated.
                 </li>
             </ul>
         </div>
@@ -1190,20 +1190,20 @@ abstract class AppDatabase : RoomDatabase() {
             <ul>
                 <li>
                     The <code>AppDatabase</code> class must be annotated with <code>
-                    @Database</code> and provide an entities array naming each data entity we have defined above
+                    @Database</code> and provide an entities array naming each data entity we have defined above.
                 </li>
                 <li>
-                    Optionally a version number may be privided, this is essential is changes have been made to the
-                    database architecture, each change necessitates incrementing the version number by one
+                    Optionally, a version number may be provided, this is essential if changes have been made to the
+                    database architecture; each change necessitates incrementing the version number by one.
                 </li>
                 <li>
                     The <code>AppDatabase</code> class extends the <code>RoomDataBase</code> base class and contains
-                    methods corresponding to each DAO that has been implemented
+                    methods corresponding to each DAO that has been implemented.
                 </li>
                 <li>
-                    The companion object (along with the <code>BaseApplication</code> class described below
+                    The companion object (along with the <code>BaseApplication</code> class described below)
                     ensures that only one instance of the
-                    <code>AppDatabase</code> class is available while the application is running
+                    <code>AppDatabase</code> class is available while the application is running.
                 </li>
             </ul>
         </div>
@@ -1212,7 +1212,7 @@ abstract class AppDatabase : RoomDatabase() {
         <p>
             We are almost done with our Room specific implementations!
             It is necessary to create a class <code>BaseApplication</code> so as to ensure
-            our app accesses our database ac a singleton instance:
+            our app accesses our database as a singleton instance:
         <pre>
         <code>
 class BaseApplication : Application() {
@@ -1249,7 +1249,7 @@ class BaseApplication : Application() {
         <p>
             Now that we have finished implementing the necessary components to use the Room library in our application,
             we can define our <code>ListViewModel</code> class to contain the logic for accessing the DAOs and
-            odifying our database tables:
+            modifying our database tables:
         <pre>
         <code>
 class ListViewModel(
@@ -1317,7 +1317,7 @@ class ListViewModel(
     </pre>
         <p>
             Since we are displaying a list of <code>MainItem</code> and <code>DetailItem</code> in their respective
-            fragments, we must implement adaoter classes for both lists:
+            fragments, we must implement adapter classes for both lists:
         </p>
     </div>
     <div class="row">
@@ -1420,7 +1420,7 @@ class DetailAdapter(
         </div>
         <div class="row">
             <p>
-                The last step in our application is to define click listeners, navigation actions, and some additional
+                The last step in our application is to define click listeners, navigation actions and some additional
                 UI components
                 (<a href="https://developer.android.com/reference/android/app/AlertDialog">Alert Dialogs</a>
                 to confirm the deletion of existing items and receive text necessary to create new items)
@@ -1637,7 +1637,7 @@ class DetailListFragment : Fragment() {
         </div>
         <div class="row">
             <h3>Application Demonstration:</h3>
-            <p> See the link at the bottom of this page to install this application onto your own device</p>
+            <p> See the link at the bottom of this page to install this application onto your own device</p>.
             <div class="pt-5"></div>
             <div class="col-md-6 text-center">
                 <img alt="MainListFragment Screenshot" src="images/ListMaker/main.png" width="400">
@@ -1650,11 +1650,11 @@ class DetailListFragment : Fragment() {
         <div class="row">
             <h3>Top Accomplishments:</h3>
             <p>
-                Exploring mobile application development has been extrmely worthwhile and I would reccomend it to any CS student or
-                anyone with an interest in programming. I have learned a lot about software architecture, testing, and
+                Exploring mobile application development has been extremely worthwhile, and I would reccomend it to any CS student or
+                anyone with an interest in programming. I have learned a lot about software architecture, testing and
                 design. I have been introduced to software design patterns and situations in which they are useful.
                 Additionally, learning Kotlin gave me a better appreciation for object-oriented languages and why they
-                are so commonly used in when developing applications. Before exploring mobile application development,
+                are so commonly used when developing applications. Before exploring mobile application development,
                 I understood what interfaces and inherited classes were but wasn't sure when to use one over the other.
                 In summary, developing mobile applications has allowed me to put into practice the computer science
                 fundamentals I had a previous academic understanding of but in a more practical, real-world way.
@@ -1663,14 +1663,14 @@ class DetailListFragment : Fragment() {
             <h3>What would I do differently?</h3>
             <p>
                 I knew from past learning experiences that I would learn best by completing projects with minimal guidance
-                as opposed to watching videos, reading documentation, or working through tutorials. For this reason,
+                as opposed to watching videos, reading documentation or working through tutorials. For this reason,
                 I wanted to develop my own applications as soon as possible. I attempted a few applications guided only
-                by my own intuition and my past experience as a computer science student. These applications did not go
-                very far and I soon realized I needed to complete some formalized training. The
+                by my own intuition and my experience as a computer science student. These applications did not go
+                very far, and I soon realized I needed to complete some formalized training. The
                 <a href="https://developer.android.com/courses/android-basics-kotlin/course">Android Basics in Kotlin Course</a>
                 offered by Android was perfect. It consisted of six modules, and each module took about two weeks to complete.
-                After finishing the training, I had a very good understanding of the basic components of building a
-                well designed, useful, and appealing applications. I wish I had completed this course sooner.
+                After finishing the training, I had a very good understanding of the basic components of building
+                well designed, useful and appealing applications. I wish I had completed this course sooner.
             </p>
             <div class="pt-5"></div>
             <h3>Published Applications:</h3>
@@ -1715,7 +1715,7 @@ class DetailListFragment : Fragment() {
                         stream
                         originating from the Koradi Radio server. It implements a
                         <a href="https://pub.dev/packages/audio_service">background audio service</a>
-                        in order to continuously play media, even when the app is not in the foreground
+                        in order to continuously play media, even when the app is not in the foreground.
                     </p>
                     <img alt="Koradi App screenshot" class="mx-auto d-block" height="700" src="images/koradi.png"/>
                     <br>
