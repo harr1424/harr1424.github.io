@@ -19,7 +19,7 @@
     </div>
     <div class="pt-5"></div>
     <div class="row">
-        <h1>Cloud Computing</h1>
+        <h3>Cloud Computing</h3>
         <p>
             As part of a graduate course in cloud computing, I worked with a group to develop a container testing service.
             Many organizations host their web applications using containers (see below) that run on cloud infrastructure.
@@ -38,7 +38,7 @@
     </div>
     <div class="pt-5"></div>
     <div class="row">
-        <h1>What is an API? What are containers?</h1>
+        <h3>What is an API? What are containers?</h3>
         <p>
             Generally speaking, an API is a software intermediary that allows two applications to talk to each other.
             For example, if you are using your phone and want to access a YouTube video your phone will communicate with
@@ -122,7 +122,7 @@ CMD [ "uvicorn", "main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "
     </div>
     <div class="pt-5"></div>
     <div class="row">
-        <h1>Creating a DynamoDB table using Terraform</h1>
+        <h3>Creating a DynamoDB table using Terraform</h3>
         <p>
             <a href="https://www.terraform.io/">Terraform</a> is an
             <a href="https://en.wikipedia.org/wiki/Infrastructure_as_code">infrastructure as code</a> platform
@@ -192,7 +192,7 @@ resource "aws_dynamodb_table" "clients" {
     </div>
     <div class="pt-5"></div>
     <div class="row">
-        <h1>Developing a backend authentication API</h1>
+        <h3>Developing a backend authentication API</h3>
         <p>
             I have used <a href="https://fastapi.tiangolo.com/">FastAPI</a> to implement the back-end logic required
             for performing authentication. I've chosen FastAPI over competing API frameworks because I was very impressed
@@ -416,7 +416,7 @@ if __name__ == '__main__':
         doing so is featured at the top of this page.
     </p>
     <div class="pt-5"></div>
-    <h1>Creating a front-end registration form</h1>
+    <h3>Creating a front-end registration form</h3>
     <div class="row">
         <p>
             Next, a registration form needs to be created that will allow clients to register for an account with our
@@ -524,7 +524,7 @@ CMD [ "nginx", "-g", "daemon off;"]
 </div>
 <div class="pt-5"></div>
 <div class="row">
-    <h1>Deploying with Docker and Amazon ECS</h1>
+    <h3>Deploying with Docker and Amazon ECS</h3>
     <p>
         We have succesively implemented all the individual components of our microservice, and testing has confirmed
         that everything is working as expected. Now it is time to deploy our microservice to cloud infrastructure
@@ -611,7 +611,7 @@ networks:
     </div>
 <div class="pt-5"></div>
     <div class="row">
-        <h1>Integrating the authentication microservice with the main project API</h1>
+        <h3>Integrating the authentication microservice with the main project API</h3>
         <p>
             Now that our authentication microservice is up and running, we can request our clients register for an
             account and provide these credentials before using our services. Integrating the authentication
@@ -700,9 +700,9 @@ async def upload_file(file: UploadFile, username: str, password: str):
 <div class="pt-5"></div>
 
     <div class="row">
-        <h1>
+        <h3>
             What I've learned
-        </h1>
+        </h3>
         <div class="col-md-12">
         <p>
             APIs and microservices are a fundamental topic in contemporary computing. The practical experience gained
