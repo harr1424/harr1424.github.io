@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -7,79 +8,110 @@
 
     <!-- Bootstrap CSS -->
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
 
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
 
     <title>APIs and Cloud Computing</title>
 </head>
+
 <body>
-<div class="container">
-    <div class="row ">
-        <div class="dropdown" style="float:left;">
-            <h1><a href="index.html">Home</a></h1>
-            <div class="dropdown-content">
-                <a href="mobile_app_dev.html">Mobile Application Development</a>
-                <a href="cloud_computing.html">Cloud Computing: Authentication API</a>
-                <a href="3.html">Topic Three</a>
+    <div class="container">
+        <div class="row ">
+            <div class="dropdown">
+                <a class="btn btn-secondary btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Menu
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="index.html">Home</a></li>
+                    <li><a class="dropdown-item" href="mobile_app_dev.html">Mobile Application Development</a></li>
+                    <li><a class="dropdown-item" href="cloud_computing.html">Cloud Computing</a></li>
+                    <li><a class="dropdown-item" href="3.html">Topic 3</a></li>
+                    <li><a class="dropdown-item" href="4.html">Topic 4</a></li>
+                    <li><a class="dropdown-item" href="5.html">Topic 5</a></li>
+                    <li><a class="dropdown-item" href="honorable_mentions.html">Honorable Mentions</a></li>
+                    <li><a class="dropdown-item" href="reflective_essay.html">Reflective Essay</a></li>
+                    <li><a class="dropdown-item" href="CV.html">Cirriculum Vitae</a></li>
+                </ul>
             </div>
-          </div>
-        <h1><a href="index.html">Home</a></h1>
-    </div>
-    <div class="pt-5"></div>
-    <div class="row">
-        <h3>Cloud Computing</h3>
-        <p>
-            As part of a graduate course in cloud computing, I worked with a group to develop a container testing service.
-            Many organizations host their web applications using containers (see below) that run on cloud infrastructure.
-            Our group determined that a service allowing organizations to test their containerized applications in a
-            simulated cloud-based production environment would be met with enthusiasm. The service we would implement
-            would allow our clients to upload a container image to our infrastructure. Our service would then provision
-            the necessary resources to deploy and test this container. Almost immediately, we recognized that
-            providing such a service entailed exposing our infrastructure to abuse by malicious actors. For example
-            it would be trivial to upload a container intended to misuse our cloud infrastructure for the purpose of
-            mining cryptocurrency, or to provision web hosting services in order to facilitate illegal
-            activity. We determined it would be necessary to thoroughly vet our clients and also to require them to
-            register an account with us before using our service. My contribution to this project was to create an
-            authentication <a href="https://en.wikipedia.org/wiki/Microservices">microservice</a> that would be used to
-            authenticate our clients before they could access our service.
-        </p>
-    </div>
-    <div class="row">
-        <h3>What is an API? What are containers?</h3>
-        <p>
-            Generally speaking, an API is a software intermediary that allows two applications to talk to each other.
-            For example, if you are using your phone and want to access a YouTube video, your phone will communicate with
-            the YouTube servers using an intermediary API that takes your phone’s request, retrieves the data from
-            YouTube’s servers and returns it to your device.
-            An API also adds a layer of security by ensuring that the two devices only access each other through a
-            predefined intermediary. However, APIs can actually be security flaws if the access to the API is not
-            properly controlled and have been for websites such as Facebook.
-            Modern APIs often rely on standards (such as HTTP or REST), which are friendly to developers and widely
-            understood.
-        </p>
-        <p>
-            The functional unit of an API is known as an <i>endpoint</i>. Endpoints can be implemented to perform specific
-            functions. Imagine an API that is contacted in order to retrieve up-to-date weather information.
-            One endpoint may return JSON data describing a weather forecast and another endpoint may return current weather
-            information. Most APIs are contacted via the public internet, and in such cases, the API is accessed
-            at its <i>base url</i>. For example, the United States National Weather Service provides a free and
-            public API providing weather information at the base address <a href="https://api.weather.gov">https://api.weather.gov</a>.
-            Navigating to this link in a web browser, or requesting the page via cURL or similar command line tool, will
-            return a message informing the API consumer of the APIs status. Specific endpoints can be accessed by
-            appending to the <i>base url</i>. For example, <a href="https://api.weather.gov/alerts">https://api.weather.gov/alerts</a>
-             returns a list of all current weather alerts in the United States.
-        </p>
-        <p>
-            Frequently, APIs
-            are run in <a href="https://www.docker.com/resources/what-container/">Docker containers</a>, which allows them to
-            be highly portable (able to operate on a wide variety of infrastructure across various operating systems) and
-            also highly efficient (operate on as little computing resources as possible). A developer is able to write
-            a recipe describing a particular container using a <a href="https://docs.docker.com/engine/reference/builder/">dockerfile</a>.
-            The example below demonstrates the specification necessary to run an API accessing Amazon Web Services (AWS)
-            resources. This dockerfile will be used to house the API examined in depth on this page:
-        </p>
-        <div class="col-md-6">
-            <pre>
+        </div>
+        <div class="pt-5"></div>
+        <div class="row">
+            <h3>Cloud Computing</h3>
+            <p>
+                As part of a graduate course in cloud computing, I worked with a group to develop a container testing
+                service.
+                Many organizations host their web applications using containers (see below) that run on cloud
+                infrastructure.
+                Our group determined that a service allowing organizations to test their containerized applications in a
+                simulated cloud-based production environment would be met with enthusiasm. The service we would
+                implement
+                would allow our clients to upload a container image to our infrastructure. Our service would then
+                provision
+                the necessary resources to deploy and test this container. Almost immediately, we recognized that
+                providing such a service entailed exposing our infrastructure to abuse by malicious actors. For example
+                it would be trivial to upload a container intended to misuse our cloud infrastructure for the purpose of
+                mining cryptocurrency, or to provision web hosting services in order to facilitate illegal
+                activity. We determined it would be necessary to thoroughly vet our clients and also to require them to
+                register an account with us before using our service. My contribution to this project was to create an
+                authentication <a href="https://en.wikipedia.org/wiki/Microservices">microservice</a> that would be used
+                to
+                authenticate our clients before they could access our service.
+            </p>
+        </div>
+        <div class="row">
+            <h3>What is an API? What are containers?</h3>
+            <p>
+                Generally speaking, an API is a software intermediary that allows two applications to talk to each
+                other.
+                For example, if you are using your phone and want to access a YouTube video, your phone will communicate
+                with
+                the YouTube servers using an intermediary API that takes your phone’s request, retrieves the data from
+                YouTube’s servers and returns it to your device.
+                An API also adds a layer of security by ensuring that the two devices only access each other through a
+                predefined intermediary. However, APIs can actually be security flaws if the access to the API is not
+                properly controlled and have been for websites such as Facebook.
+                Modern APIs often rely on standards (such as HTTP or REST), which are friendly to developers and widely
+                understood.
+            </p>
+            <p>
+                The functional unit of an API is known as an <i>endpoint</i>. Endpoints can be implemented to perform
+                specific
+                functions. Imagine an API that is contacted in order to retrieve up-to-date weather information.
+                One endpoint may return JSON data describing a weather forecast and another endpoint may return current
+                weather
+                information. Most APIs are contacted via the public internet, and in such cases, the API is accessed
+                at its <i>base url</i>. For example, the United States National Weather Service provides a free and
+                public API providing weather information at the base address <a
+                    href="https://api.weather.gov">https://api.weather.gov</a>.
+                Navigating to this link in a web browser, or requesting the page via cURL or similar command line tool,
+                will
+                return a message informing the API consumer of the APIs status. Specific endpoints can be accessed by
+                appending to the <i>base url</i>. For example, <a
+                    href="https://api.weather.gov/alerts">https://api.weather.gov/alerts</a>
+                returns a list of all current weather alerts in the United States.
+            </p>
+            <p>
+                Frequently, APIs
+                are run in <a href="https://www.docker.com/resources/what-container/">Docker containers</a>, which
+                allows them to
+                be highly portable (able to operate on a wide variety of infrastructure across various operating
+                systems) and
+                also highly efficient (operate on as little computing resources as possible). A developer is able to
+                write
+                a recipe describing a particular container using a <a
+                    href="https://docs.docker.com/engine/reference/builder/">dockerfile</a>.
+                The example below demonstrates the specification necessary to run an API accessing Amazon Web Services
+                (AWS)
+                resources. This dockerfile will be used to house the API examined in depth on this page:
+            </p>
+            <div class="col-md-6">
+                <pre>
                 <code>
 FROM python:3.8-slim-buster
 WORKDIR /app
@@ -93,52 +125,58 @@ EXPOSE 5555
 CMD [ "uvicorn", "main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "5555" ]
                 </code>
             </pre>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li>
+                        The <code>FROM</code> instruction specifies a parent image to install onto the container; in
+                        this case a variant of Debian Buster that contains the minimal dependencies (slim) required to
+                        run
+                        Python 3.8.
+                    </li>
+                    <li>
+                        The <code>WORKDIR</code> instruction sets the working directory for any subsequent
+                        <code>RUN</code>
+                        commands.
+                    </li>
+                    <li>
+                        Environment variables can be specified using the <code>ENV</code> instruction. In this case,
+                        such
+                        environment variables are credentials to access AWS resources and have thus been redacted.
+                    </li>
+                    <li>
+                        The <code>COPY</code> instruction has been used here to copy files from the local machine into
+                        the
+                        container.
+                    </li>
+                    <li>
+                        The <code>RUN</code> instruction is used to execute a command that will install packages
+                        required
+                        by the API.
+                    </li>
+                    <li>
+                        The <code>EXPOSE</code> instruction is used to instruct the container to listen on a specific
+                        port
+                        at runtime.
+                    </li>
+                    <li>
+                        The <code>CMD</code> instruction specifies a command to execute once runtime begins.
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="col-md-6">
-            <ul>
-                <li>
-                    The <code>FROM</code> instruction specifies a parent image to install onto the container; in
-                    this case a variant of Debian Buster that contains the minimal dependencies (slim) required to run
-                    Python 3.8.
-                </li>
-                <li>
-                    The <code>WORKDIR</code> instruction sets the working directory for any subsequent <code>RUN</code>
-                    commands.
-                </li>
-                <li>
-                    Environment variables can be specified using the <code>ENV</code> instruction. In this case, such
-                    environment variables are credentials to access AWS resources and have thus been redacted.
-                </li>
-                <li>
-                    The <code>COPY</code> instruction has been used here to copy files from the local machine into the
-                    container.
-                </li>
-                <li>
-                    The <code>RUN</code> instruction is used to execute a command that will install packages required
-                    by the API.
-                </li>
-                <li>
-                    The <code>EXPOSE</code> instruction is used to instruct the container to listen on a specific port
-                    at runtime.
-                </li>
-                <li>
-                    The <code>CMD</code> instruction specifies a command to execute once runtime begins.
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="pt-5"></div>
-    <div class="row">
-        <h3>Creating a DynamoDB table using Terraform</h3>
-        <p>
-            <a href="https://www.terraform.io/">Terraform</a> is an
-            <a href="https://en.wikipedia.org/wiki/Infrastructure_as_code">infrastructure as code</a> platform
-            that allows cloud developers to provision infrastructure using machine and human readable files
-            written in a declarative syntax. The code below demonstrates how this is done and assumes that both
-            the Terraform and Amazon Web Services CLI have been installed on a local computer:
-        </p>
-        <div class="col-md-6">
-            <pre>
+        <div class="pt-5"></div>
+        <div class="row">
+            <h3>Creating a DynamoDB table using Terraform</h3>
+            <p>
+                <a href="https://www.terraform.io/">Terraform</a> is an
+                <a href="https://en.wikipedia.org/wiki/Infrastructure_as_code">infrastructure as code</a> platform
+                that allows cloud developers to provision infrastructure using machine and human readable files
+                written in a declarative syntax. The code below demonstrates how this is done and assumes that both
+                the Terraform and Amazon Web Services CLI have been installed on a local computer:
+            </p>
+            <div class="col-md-6">
+                <pre>
                 <code>
 provider "aws" {
   region = "us-west-2"
@@ -163,55 +201,62 @@ resource "aws_dynamodb_table" "clients" {
 }
                 </code>
             </pre>
-        </div>
-        <div class="col-md-6">
-            <ul>
-                <li>
-                    A provider block is declared to inform the Terraform interpreter that Amazon Web Services (AWS)
-                    will be used in order to provision resources.
-                </li>
-                <li>
-                    A resource definition block specifies a resource type <code>aws_dynamodb_table</code>
-                     and name <code>clients</code>.
-                </li>
-                <li>
-                    The <code>aws_dynamodb_table</code> contains mandatory and optional attributes that are defined.
-                </li>
-                <li>
-                    Of note is the <code>hash_key</code>, attribute which sets the primary key for the table to a client's
-                    provided email address.
-                </li>
-                <li>
-                    The <code>hash_key</code> attribute must then be specified to be of type string.
-                </li>
-                <li>
-                    Unlike SQL, DynamoDB tables don't require all columns to be defined at table creation.
-                </li>
-                <li>
-                    New columns will be automatically created when objects containing such fields are inserted into the table
-                     (see the <code>register</code> endpoint in the following section to get a better idea of how this works).
-                </li>
-                <li>
-                    <code>tags</code> can be useful when a Terraform configuration file contains a large quantity
-                    of resources.
-                </li>
-            </ul>
-    </div>
-    <div class="pt-5"></div>
-    <div class="row">
-        <h3>Developing a back-end authentication API</h3>
-        <p>
-            I have used <a href="https://fastapi.tiangolo.com/">FastAPI</a> to implement the back-end logic required
-            for performing authentication. I've chosen FastAPI over competing API frameworks because I was very impressed
-            with the documentation provided by FastAPI. Not only were the getting started tutorials on their website
-            excellent, but within the API itself one can navigate to a built-in <code>/docs</code> endpoint and
-            interact with the various endpoints contained within the API (this will be demonstrated below). Let's take a
-            look at our API implementation; it is very straightforward:
-        </p>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-      <pre>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li>
+                        A provider block is declared to inform the Terraform interpreter that Amazon Web Services (AWS)
+                        will be used in order to provision resources.
+                    </li>
+                    <li>
+                        A resource definition block specifies a resource type <code>aws_dynamodb_table</code>
+                        and name <code>clients</code>.
+                    </li>
+                    <li>
+                        The <code>aws_dynamodb_table</code> contains mandatory and optional attributes that are defined.
+                    </li>
+                    <li>
+                        Of note is the <code>hash_key</code>, attribute which sets the primary key for the table to a
+                        client's
+                        provided email address.
+                    </li>
+                    <li>
+                        The <code>hash_key</code> attribute must then be specified to be of type string.
+                    </li>
+                    <li>
+                        Unlike SQL, DynamoDB tables don't require all columns to be defined at table creation.
+                    </li>
+                    <li>
+                        New columns will be automatically created when objects containing such fields are inserted into
+                        the table
+                        (see the <code>register</code> endpoint in the following section to get a better idea of how
+                        this works).
+                    </li>
+                    <li>
+                        <code>tags</code> can be useful when a Terraform configuration file contains a large quantity
+                        of resources.
+                    </li>
+                </ul>
+            </div>
+            <div class="pt-5"></div>
+            <div class="row">
+                <h3>Developing a back-end authentication API</h3>
+                <p>
+                    I have used <a href="https://fastapi.tiangolo.com/">FastAPI</a> to implement the back-end logic
+                    required
+                    for performing authentication. I've chosen FastAPI over competing API frameworks because I was very
+                    impressed
+                    with the documentation provided by FastAPI. Not only were the getting started tutorials on their
+                    website
+                    excellent, but within the API itself one can navigate to a built-in <code>/docs</code> endpoint and
+                    interact with the various endpoints contained within the API (this will be demonstrated below).
+                    Let's take a
+                    look at our API implementation; it is very straightforward:
+                </p>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <pre>
         <code>
 import hashlib
 import hmac
@@ -226,20 +271,22 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('clients')
         </code>
     </pre>
-    </div>
-        <div class="col-md-6">
-            <ul>
-                <li>
-                    After adding the necessary import statements, we initialize our FastAPI instance to a variable
-                    <code>app</code> and also initialize variables used to access an AWS DynamoDB table that will be
-                    used to store client credentials.
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <pre>
+                </div>
+                <div class="col-md-6">
+                    <ul>
+                        <li>
+                            After adding the necessary import statements, we initialize our FastAPI instance to a
+                            variable
+                            <code>app</code> and also initialize variables used to access an AWS DynamoDB table that
+                            will be
+                            used to store client credentials.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <pre>
                 <code>
 def hash_new_password(password: str) -> Tuple[bytes, bytes]:
     """
@@ -262,52 +309,55 @@ def is_correct_password(salt: bytes, hashed_password: bytes, password: str) -> b
     )
                 </code>
             </pre>
-    </div>
-        <div class="col-md-6">
-            <ul>
-                <li>
-                    Next, two helper functions are defined that will be used for authentication.
-                </li>
-                <li>
-                    <code>hash_new_password()</code> accepts as an argument a string corresponding to a password
-                    provided by the client during the registration process.
-                </li>
-                <li>
-                    The password is
-                    <a href="https://en.wikipedia.org/wiki/Rainbow_table#Defense_against_rainbow_tables">salted</a>
-                    to increase entropy during hashing and mitigate
-                    <a href="https://en.wikipedia.org/wiki/Rainbow_table">rainbow table</a> attacks.
-                </li>
-                <li>
-                    After salting, the password is hashed successively, in this case 10,000 times, and the resulting
-                    hash, as well as the salt used, are returned by the function. <br><br><br><br>
-                </li>
-                <li>
-                    <code>is_correct_password()</code> accepts three arguments:
-                    <ol>
+                </div>
+                <div class="col-md-6">
+                    <ul>
                         <li>
-                            A salt that was used to hash a client-provided password.
+                            Next, two helper functions are defined that will be used for authentication.
                         </li>
                         <li>
-                            A hash of the same client-provided password.
+                            <code>hash_new_password()</code> accepts as an argument a string corresponding to a password
+                            provided by the client during the registration process.
                         </li>
                         <li>
-                            A new password (unhashed) that is being provided in an authentication attempt.
+                            The password is
+                            <a
+                                href="https://en.wikipedia.org/wiki/Rainbow_table#Defense_against_rainbow_tables">salted</a>
+                            to increase entropy during hashing and mitigate
+                            <a href="https://en.wikipedia.org/wiki/Rainbow_table">rainbow table</a> attacks.
                         </li>
-                    </ol>
-                </li>
-                <li>
-                    This function will repeat the hashing process defined in <code>hash_new_password()</code>
-                    using the previously-stored salt, and if the resulting hash matches the stored hash, the password
-                    can be considered correct.
-                </li>
-            </ul>
-        </div>
-    </div>
-    <h5>The remainder of the API implementation involves defining endpoints and how they should behave:</h5>
-    <div class="row">
-        <div class="col-md-6">
-            <pre>
+                        <li>
+                            After salting, the password is hashed successively, in this case 10,000 times, and the
+                            resulting
+                            hash, as well as the salt used, are returned by the function. <br><br><br><br>
+                        </li>
+                        <li>
+                            <code>is_correct_password()</code> accepts three arguments:
+                            <ol>
+                                <li>
+                                    A salt that was used to hash a client-provided password.
+                                </li>
+                                <li>
+                                    A hash of the same client-provided password.
+                                </li>
+                                <li>
+                                    A new password (unhashed) that is being provided in an authentication attempt.
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            This function will repeat the hashing process defined in <code>hash_new_password()</code>
+                            using the previously-stored salt, and if the resulting hash matches the stored hash, the
+                            password
+                            can be considered correct.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <h5>The remainder of the API implementation involves defining endpoints and how they should behave:</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <pre>
                 <code>
 @app.post("/register/")
 async def register(username: str = Form(...), password: str = Form(...)):
@@ -371,130 +421,156 @@ if __name__ == '__main__':
     uvicorn.run("main:app", host='localhost', port=5555, reload=True)
                 </code>
             </pre>
-        </div>
-        <div class="col-md-6">
-            <br>
-            <ul>
-                <li>
-                    In FastAPI endpoints are defined using the annotation pattern
-                    <code>@&lt;app_name&gt;.&lt;HTTP_request_type&gt;(/"&lt;path_to_endpoint&gt;")</code>.
-                </li>
-                <li>
-                    This means API consumers can access the endpoint by navigating to the base url followed by the
-                    endpoints path, i.e. <code>authenticator_api.dev/register/</code>.
-                </li>
-                <li>
-                    The <code>register</code> endpoint uses the helper function <code>hash_new_password()</code>
-                    in order to obtain a salt and hashed password provided during a registration attempt. These values
-                    will be stored as a DynamoDB table row where the client email serves as a primary key.
-                </li>
-                <li>
-                    The <code>authenticate</code> endpoint is implemented to allow clients the convenience
-                    of ensuring their registered credentials are working as expected. This endpoint expects to receive
-                    HTML form data from the project's front end web page (described below).
-                </li>
-                <li>
-                    This endpoint will query the DynamoDB table for a provided email, and if this email exists, the
-                    corresponding salt and hashed password that were stored in the same row will be retrieved and
-                    will be passed to the helper function <code>is_correct_password()</code> in order to determine if
-                    the password provided to the form matches the previously registered password.
-                </li>
-                <li>
-                    The <code>authenticate_no_form</code> endpoint is used to interface directly between the main
-                    project's API (responsible for provisioning cloud infrastructure and deploying client-provided
-                    images) and expects to receive a username and password value as <code>string</code>
-                    types.
-                </li>
-                <li>
-                    This function contains identical logic as explained above, only the argument types differ.
-                </li>
-                <li>
-                    Finally, a <a href="https://www.uvicorn.org/">Uvicorn</a> server is started that runs the API
-                    we have just implemented using a specified host and port.
-                </li>
-            </ul>
-        </div>
-    </div>
-    <p>
-        This API can now be loaded onto a docker container for portable deployment. The dockerfile responsible for
-        doing so is featured at the top of this page.
-    </p>
-    <div class="pt-5"></div>
-    <h3>Creating a front-end registration form</h3>
-    <div class="row">
-        <p>
-            Next, a registration form needs to be created that will allow clients to register for an account with our
-            service and provide their preferred credentials. This form is simple and consists of basic HTML and
-            <a href="https://getbootstrap.com/">Bootstrap</a> CSS. Bootstrap is used because it provides
-            convenient form classes that validate field entries before the form is submitted, and this
-            eliminates edge cases where a client may submit a null username or password value. Note that the API
-            has been taken offline to avoid incurring unexpected costs on AWS, and the buttons <code>Authenticate</code>
-            and <code>Register</code> now post the form field data to a public DNS resolver, so please do not
-            enter any sensitive information.
-        </p>
-    </div>
-    <div class="row">
-        <div class="col-md-3">
-        </div>
-        <div class="col-md-6">
-        <p>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Authenticate</title>
-</head>
-<body>
-<div class="mx-auto" style="width: 600px;">
-<h1>Authenticate</h1>
-<form action="http://1.1.1.1" method="post">
-    <div class="form-check-inline">
-        <label for="loginEmail" class="form-label">Email address</label>
-        <input name="username" type="email" required class="form-control" id="loginEmail" aria-describedby="emailHelp">
-        <div id="loginEmailHelp" class="form-text">Enter the email address you provided when registering for our service</div>
-    </div>
-    <div class="form-check-inline">
-        <label for="loginPassword" class="form-label">Password</label>
-        <input name="password" required type="password" class="form-control" id="loginPassword">
-    </div>
-    <button type="submit" class="btn btn-primary">Authenticate</button>
-</form>
-<br>
-<br>
-<h1>Register</h1>
-<form action="http://1.1.1.1/" method="post">
-    <div class="form-check-inline">
-        <label for="registerEmail" class="form-label">Email address</label>
-        <input name="username" required type="email" class="form-control" id="registerEmail" aria-describedby="emailHelp">
-        <div id="registerEmailHelp" class="form-text">Enter a unique email address you would like to use when authenticating</div>
-    </div>
-    <div class="form-check-inline">
-        <label for="registerPassword" class="form-label">Password</label>
-        <input name="password" required type="password" class="form-control" id="registerPassword">
-    </div>
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
-</div>
+                </div>
+                <div class="col-md-6">
+                    <br>
+                    <ul>
+                        <li>
+                            In FastAPI endpoints are defined using the annotation pattern
+                            <code>@&lt;app_name&gt;.&lt;HTTP_request_type&gt;(/"&lt;path_to_endpoint&gt;")</code>.
+                        </li>
+                        <li>
+                            This means API consumers can access the endpoint by navigating to the base url followed by
+                            the
+                            endpoints path, i.e. <code>authenticator_api.dev/register/</code>.
+                        </li>
+                        <li>
+                            The <code>register</code> endpoint uses the helper function <code>hash_new_password()</code>
+                            in order to obtain a salt and hashed password provided during a registration attempt. These
+                            values
+                            will be stored as a DynamoDB table row where the client email serves as a primary key.
+                        </li>
+                        <li>
+                            The <code>authenticate</code> endpoint is implemented to allow clients the convenience
+                            of ensuring their registered credentials are working as expected. This endpoint expects to
+                            receive
+                            HTML form data from the project's front end web page (described below).
+                        </li>
+                        <li>
+                            This endpoint will query the DynamoDB table for a provided email, and if this email exists,
+                            the
+                            corresponding salt and hashed password that were stored in the same row will be retrieved
+                            and
+                            will be passed to the helper function <code>is_correct_password()</code> in order to
+                            determine if
+                            the password provided to the form matches the previously registered password.
+                        </li>
+                        <li>
+                            The <code>authenticate_no_form</code> endpoint is used to interface directly between the
+                            main
+                            project's API (responsible for provisioning cloud infrastructure and deploying
+                            client-provided
+                            images) and expects to receive a username and password value as <code>string</code>
+                            types.
+                        </li>
+                        <li>
+                            This function contains identical logic as explained above, only the argument types differ.
+                        </li>
+                        <li>
+                            Finally, a <a href="https://www.uvicorn.org/">Uvicorn</a> server is started that runs the
+                            API
+                            we have just implemented using a specified host and port.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <p>
+                This API can now be loaded onto a docker container for portable deployment. The dockerfile responsible
+                for
+                doing so is featured at the top of this page.
+            </p>
+            <div class="pt-5"></div>
+            <h3>Creating a front-end registration form</h3>
+            <div class="row">
+                <p>
+                    Next, a registration form needs to be created that will allow clients to register for an account
+                    with our
+                    service and provide their preferred credentials. This form is simple and consists of basic HTML and
+                    <a href="https://getbootstrap.com/">Bootstrap</a> CSS. Bootstrap is used because it provides
+                    convenient form classes that validate field entries before the form is submitted, and this
+                    eliminates edge cases where a client may submit a null username or password value. Note that the API
+                    has been taken offline to avoid incurring unexpected costs on AWS, and the buttons
+                    <code>Authenticate</code>
+                    and <code>Register</code> now post the form field data to a public DNS resolver, so please do not
+                    enter any sensitive information.
+                </p>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        <!DOCTYPE html>
+                        <html lang="en">
+
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1">
+                            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+                                rel="stylesheet"
+                                integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+                                crossorigin="anonymous">
+                            <title>Authenticate</title>
+                        </head>
+
+                        <body>
+                            <div class="mx-auto" style="width: 600px;">
+                                <h1>Authenticate</h1>
+                                <form action="http://1.1.1.1" method="post">
+                                    <div class="form-check-inline">
+                                        <label for="loginEmail" class="form-label">Email address</label>
+                                        <input name="username" type="email" required class="form-control"
+                                            id="loginEmail" aria-describedby="emailHelp">
+                                        <div id="loginEmailHelp" class="form-text">Enter the email address you provided
+                                            when registering for our service</div>
+                                    </div>
+                                    <div class="form-check-inline">
+                                        <label for="loginPassword" class="form-label">Password</label>
+                                        <input name="password" required type="password" class="form-control"
+                                            id="loginPassword">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Authenticate</button>
+                                </form>
+                                <br>
+                                <br>
+                                <h1>Register</h1>
+                                <form action="http://1.1.1.1/" method="post">
+                                    <div class="form-check-inline">
+                                        <label for="registerEmail" class="form-label">Email address</label>
+                                        <input name="username" required type="email" class="form-control"
+                                            id="registerEmail" aria-describedby="emailHelp">
+                                        <div id="registerEmailHelp" class="form-text">Enter a unique email address you
+                                            would like to use when authenticating</div>
+                                    </div>
+                                    <div class="form-check-inline">
+                                        <label for="registerPassword" class="form-label">Password</label>
+                                        <input name="password" required type="password" class="form-control"
+                                            id="registerPassword">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Register</button>
+                                </form>
+                            </div>
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-</body>
-</html>
-        </p>
-</div>
-<div class="col-md-3">
-</div>
-<br>
-<br>
+                            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                                crossorigin="anonymous"></script>
+                        </body>
 
-    <h5>
-        This simple webpage can also be deployed via a docker container:
-    </h5>
-<div class="col-md-6">
-    <pre>
+                        </html>
+                    </p>
+                </div>
+                <div class="col-md-3">
+                </div>
+                <br>
+                <br>
+
+                <h5>
+                    This simple webpage can also be deployed via a docker container:
+                </h5>
+                <div class="col-md-6">
+                    <pre>
         <code>
 FROM nginx
 COPY index.html  /usr/share/nginx/html/index.html
@@ -502,49 +578,61 @@ EXPOSE 80
 CMD [ "nginx", "-g", "daemon off;"]
         </code>
     </pre>
-</div>
-<div class="col-md-6">
-    <br>
-    <ul>
-        <li>
-            This dockerfile first loads the nginx base image.
-        </li>
-        <li>
-            Next, the html page <code>index.html</code> is copied into the container's working directory.
-        </li>
-        <li>
-            The container is instructed to listen on port 80 (http traffic).
-        </li>
-        <li>
-            A command is used to start the nginx service.
-        </li>
-    </ul>
-    </div>
-<p>
-    <a href="https://en.wikipedia.org/wiki/Nginx">Nginx</a> is a powerful, free and open source software package
-    that allows for easily configuring web servers. In this case, the web server has the very simple task of serving
-    a visitor with a static HTML page.
-</p>
-</div>
-<div class="pt-5"></div>
-<div class="row">
-    <h3>Deploying with Docker and Amazon ECS</h3>
-    <p>
-        We have successfully implemented all the individual components of our microservice, and testing has confirmed
-        that everything is working as expected. Now it is time to deploy our microservice to cloud infrastructure,
-        where our clients and the main project API can access it via the public internet. For this, I decided to use
-        <a href="https://docs.docker.com/cloud/ecs-integration/">Docker Compose and ECS</a>. Docker Compose allows
-        multiple containers to be configured and also provides the ability to define components shared between them.
-        Amazon's
-        <a href="https://aws.amazon.com/ecs/">Elastic Container Service</a> (ECS) is a container orchestration
-        service that makes it easy to deploy, manage and scale containerized applications.
-        <a href="https://aws.amazon.com/cloudformation/">Amazon Cloud Formation</a> is similar to Terraform in that
-        it uses a declarative file to provision cloud infrastructure. The <code>docker-compose.yml</code> file
-        shown below will be converted into an Amazon Cloud Formation template in order to provision the additional
-        resources needed to deploy and interface the two containers described:
-    </p>
-    <div class="col-md-6">
-        <pre>
+                </div>
+                <div class="col-md-6">
+                    <br>
+                    <ul>
+                        <li>
+                            This dockerfile first loads the nginx base image.
+                        </li>
+                        <li>
+                            Next, the html page <code>index.html</code> is copied into the container's working
+                            directory.
+                        </li>
+                        <li>
+                            The container is instructed to listen on port 80 (http traffic).
+                        </li>
+                        <li>
+                            A command is used to start the nginx service.
+                        </li>
+                    </ul>
+                </div>
+                <p>
+                    <a href="https://en.wikipedia.org/wiki/Nginx">Nginx</a> is a powerful, free and open source software
+                    package
+                    that allows for easily configuring web servers. In this case, the web server has the very simple
+                    task of serving
+                    a visitor with a static HTML page.
+                </p>
+            </div>
+            <div class="pt-5"></div>
+            <div class="row">
+                <h3>Deploying with Docker and Amazon ECS</h3>
+                <p>
+                    We have successfully implemented all the individual components of our microservice, and testing has
+                    confirmed
+                    that everything is working as expected. Now it is time to deploy our microservice to cloud
+                    infrastructure,
+                    where our clients and the main project API can access it via the public internet. For this, I
+                    decided to use
+                    <a href="https://docs.docker.com/cloud/ecs-integration/">Docker Compose and ECS</a>. Docker Compose
+                    allows
+                    multiple containers to be configured and also provides the ability to define components shared
+                    between them.
+                    Amazon's
+                    <a href="https://aws.amazon.com/ecs/">Elastic Container Service</a> (ECS) is a container
+                    orchestration
+                    service that makes it easy to deploy, manage and scale containerized applications.
+                    <a href="https://aws.amazon.com/cloudformation/">Amazon Cloud Formation</a> is similar to Terraform
+                    in that
+                    it uses a declarative file to provision cloud infrastructure. The <code>docker-compose.yml</code>
+                    file
+                    shown below will be converted into an Amazon Cloud Formation template in order to provision the
+                    additional
+                    resources needed to deploy and interface the two containers described:
+                </p>
+                <div class="col-md-6">
+                    <pre>
             <code>
 version: "3.8"
 
@@ -574,55 +662,64 @@ networks:
     name: sg-01af30133ec33c737
             </code>
         </pre>
-    </div>
-    <div class="col-md-6">
-        <ul>
-            <li>
-                <a href="https://docs.docker.com/compose/">Docker Compose</a>
-                allows for <code>x-aws</code> fields to be declared which correspond to AWS resources.
-            </li>
-            <li>
-                <code>x-aws-loadbalancer</code> is declared here but was provisioned manually via the AWS console. Creating
-                a load balancer allowed for the authentication API to have a static IP address at which it could be
-                accessed via the public internet.
-            </li>
-            <li>
-                The <code>services</code> block allows for the containerized applications defined in previous
-                dockerfiles to be built and defines port mapping.
-            </li>
-            <li>
-                It is worth noting that Docker Compose does not allow for building images stored on a local machine,
-                rather the images specified in <code>docker-compose.yml</code> must be pulled from a container
-                repository.
-            </li>
-            <li>
-                This is why the field <code>x-aws-pull_credentials</code> has been defined.
-            </li>
-            <li>
-                The <code>networks</code> block defines how the two services will interface with each other.
-            </li>
-            <li>
-                <code>sg-01af30133ec33c737</code> specifies a security group that governs the load balancer and the
-                services defined in this file.
-            </li>
-        </ul>
-    </div>
-    <p>
-        Having pushed our container images to a remote repository and completed our <code>docker-compose.yml</code>
-        file, we now need only to configure an AWS context for Docker and then run <code>docker compose up</code> and
-        our containerized applications and all required resources will be provisioned.
-    </p>
-    </div>
-<div class="pt-5"></div>
-    <div class="row">
-        <h3>Integrating the authentication microservice with the main project API</h3>
-        <p>
-            Now that our authentication microservice is up and running, we can request our clients register for an
-            account and provide these credentials before using our services. Integrating the authentication
-            microservice was fairly straightforward and is described below:
-        </p>
-        <div class="col-md-6">
-            <pre>
+                </div>
+                <div class="col-md-6">
+                    <ul>
+                        <li>
+                            <a href="https://docs.docker.com/compose/">Docker Compose</a>
+                            allows for <code>x-aws</code> fields to be declared which correspond to AWS resources.
+                        </li>
+                        <li>
+                            <code>x-aws-loadbalancer</code> is declared here but was provisioned manually via the AWS
+                            console. Creating
+                            a load balancer allowed for the authentication API to have a static IP address at which it
+                            could be
+                            accessed via the public internet.
+                        </li>
+                        <li>
+                            The <code>services</code> block allows for the containerized applications defined in
+                            previous
+                            dockerfiles to be built and defines port mapping.
+                        </li>
+                        <li>
+                            It is worth noting that Docker Compose does not allow for building images stored on a local
+                            machine,
+                            rather the images specified in <code>docker-compose.yml</code> must be pulled from a
+                            container
+                            repository.
+                        </li>
+                        <li>
+                            This is why the field <code>x-aws-pull_credentials</code> has been defined.
+                        </li>
+                        <li>
+                            The <code>networks</code> block defines how the two services will interface with each other.
+                        </li>
+                        <li>
+                            <code>sg-01af30133ec33c737</code> specifies a security group that governs the load balancer
+                            and the
+                            services defined in this file.
+                        </li>
+                    </ul>
+                </div>
+                <p>
+                    Having pushed our container images to a remote repository and completed our
+                    <code>docker-compose.yml</code>
+                    file, we now need only to configure an AWS context for Docker and then run
+                    <code>docker compose up</code> and
+                    our containerized applications and all required resources will be provisioned.
+                </p>
+            </div>
+            <div class="pt-5"></div>
+            <div class="row">
+                <h3>Integrating the authentication microservice with the main project API</h3>
+                <p>
+                    Now that our authentication microservice is up and running, we can request our clients register for
+                    an
+                    account and provide these credentials before using our services. Integrating the authentication
+                    microservice was fairly straightforward and is described below:
+                </p>
+                <div class="col-md-6">
+                    <pre>
                 <code>
 # Contact the authentication API via static load balancer
 auth_url = "http://auth-852092430.us-west-2.elb.amazonaws.com:5555/authenticate_no_form/"
@@ -662,88 +759,108 @@ async def upload_file(file: UploadFile, username: str, password: str):
         return "Invalid Credentials"
                 </code>
             </pre>
-        </div>
-        <div class="col-md-6">
-            <br>
-            <ul>
-                <li>
-                    A variable is set to hold a string containing the URL of the authentication endpoint to be contacted.
-                </li>
-                <li>
-                    A function is defined that will accept a username and password, pass these values to the
-                    authentication endpoint and return a JSON response.
-                </li>
-                <li>
-                    If the JSON response is <code>true</code>, the authentication attempt succeeds.
-                </li>
-                <li>
-                    It was necessary to use the <code>requests</code> library in Python to form an appropriate request
-                    to the endpoint containing the username and password provided by the client.
-                </li>
-                <li>
-                    The <code>upload</code> endpoint in our main project API demonstrates how the authentication
-                    service will be used.
-                </li>
-                <li>
-                    In addition to a file parameter, a client must also provide their username and password.
-                </li>
-                <li>
-                    The values of the provided username and password will be used to either return a successful
-                    authentication response and execute the file upload or else display a message informing the
-                    client that their credentials are invalid.
-                </li>
-            </ul>
-        </div>
-        </div>
-<div class="pt-5"></div>
+                </div>
+                <div class="col-md-6">
+                    <br>
+                    <ul>
+                        <li>
+                            A variable is set to hold a string containing the URL of the authentication endpoint to be
+                            contacted.
+                        </li>
+                        <li>
+                            A function is defined that will accept a username and password, pass these values to the
+                            authentication endpoint and return a JSON response.
+                        </li>
+                        <li>
+                            If the JSON response is <code>true</code>, the authentication attempt succeeds.
+                        </li>
+                        <li>
+                            It was necessary to use the <code>requests</code> library in Python to form an appropriate
+                            request
+                            to the endpoint containing the username and password provided by the client.
+                        </li>
+                        <li>
+                            The <code>upload</code> endpoint in our main project API demonstrates how the authentication
+                            service will be used.
+                        </li>
+                        <li>
+                            In addition to a file parameter, a client must also provide their username and password.
+                        </li>
+                        <li>
+                            The values of the provided username and password will be used to either return a successful
+                            authentication response and execute the file upload or else display a message informing the
+                            client that their credentials are invalid.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-5"></div>
 
-    <div class="row">
-        <h3>
-            What I've learned
-        </h3>
-        <div class="col-md-12">
-        <p>
-            APIs and microservices are a fundamental topic in contemporary computing. The practical experience gained
-            in learning how to provision and utilize cloud infrastructure has been extremely valuable. Prior to this course I
-            was familiar with AWS and even realized that a large portion of the internet was hosted on AWS infrastructure, but
-            I did not appreciate the complexity and breadth of services offered by AWS and the precision required
-            to integrate multiple services with each other. For instance, this project made use of Amazon S3 to store
-            client-uploaded images, EC2 or ECS to deploy them, load balancers to handle network traffic and Route 53
-            for resolving DNS requests to our static IP address. The majority of the orchestration between these resources
-            was performed automatically, but in order to write the configuration files necessary to kickstart this
-            orchestration, it was neceassary to research these services in depth.
-        </p>
-        <p>
-            It is also worth noting that AWS is only one cloud solution provider;
-            <a href="https://azure.microsoft.com/en-us/">Microsoft Azure</a> and
-            <a href="https://cloud.google.com/">Google Cloud Platform</a> are well-established competitors. Regardless
-            of a cloud solution provider, the usage of Docker seems essential when developing, testing and deploying
-            cloud-based applications. This project provided me with a much greater appreciation for what Docker and
-            containerized applications can accomplish, both in respect to cloud-based applications and also applications
-            intended to run locally.
-        </p>
-        <p>
-            Prior to this project, I did not have a clear understanding of what an API was or how one was implemented.
-            In a connected world increasingly supported by different software applications, APIs are crucial in
-            providing a way for exchanging information between applications and providing useful services to consumers.
-            I am delighted to have found an API framework as intuitive and easy to test as FastAPI. The image below
-            demonstrates the API specific documentation that makes FastAPI so wonderful to work with:
-            <br>
-            <br>
-            <br>
-            <br>
-        <img src="images/FastAPI.png" alt="Screenshot of FastAPI documentation demonstrating main project API" width="1200">
-            <br>
-            <br>
-            <p>
-            </p>
-        </div>
-</div>
+            <div class="row">
+                <h3>
+                    What I've learned
+                </h3>
+                <div class="col-md-12">
+                    <p>
+                        APIs and microservices are a fundamental topic in contemporary computing. The practical
+                        experience gained
+                        in learning how to provision and utilize cloud infrastructure has been extremely valuable. Prior
+                        to this course I
+                        was familiar with AWS and even realized that a large portion of the internet was hosted on AWS
+                        infrastructure, but
+                        I did not appreciate the complexity and breadth of services offered by AWS and the precision
+                        required
+                        to integrate multiple services with each other. For instance, this project made use of Amazon S3
+                        to store
+                        client-uploaded images, EC2 or ECS to deploy them, load balancers to handle network traffic and
+                        Route 53
+                        for resolving DNS requests to our static IP address. The majority of the orchestration between
+                        these resources
+                        was performed automatically, but in order to write the configuration files necessary to
+                        kickstart this
+                        orchestration, it was neceassary to research these services in depth.
+                    </p>
+                    <p>
+                        It is also worth noting that AWS is only one cloud solution provider;
+                        <a href="https://azure.microsoft.com/en-us/">Microsoft Azure</a> and
+                        <a href="https://cloud.google.com/">Google Cloud Platform</a> are well-established competitors.
+                        Regardless
+                        of a cloud solution provider, the usage of Docker seems essential when developing, testing and
+                        deploying
+                        cloud-based applications. This project provided me with a much greater appreciation for what
+                        Docker and
+                        containerized applications can accomplish, both in respect to cloud-based applications and also
+                        applications
+                        intended to run locally.
+                    </p>
+                    <p>
+                        Prior to this project, I did not have a clear understanding of what an API was or how one was
+                        implemented.
+                        In a connected world increasingly supported by different software applications, APIs are crucial
+                        in
+                        providing a way for exchanging information between applications and providing useful services to
+                        consumers.
+                        I am delighted to have found an API framework as intuitive and easy to test as FastAPI. The
+                        image below
+                        demonstrates the API specific documentation that makes FastAPI so wonderful to work with:
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <img src="images/FastAPI.png"
+                            alt="Screenshot of FastAPI documentation demonstrating main project API" width="1200">
+                        <br>
+                        <br>
+                    <p>
+                    </p>
+                </div>
+            </div>
 
 
-<!-- Option 1: Bootstrap Bundle with Popper -->
-<script crossorigin="anonymous"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Option 1: Bootstrap Bundle with Popper -->
+            <script crossorigin="anonymous"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
