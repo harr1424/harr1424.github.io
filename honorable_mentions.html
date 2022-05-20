@@ -139,20 +139,38 @@ import sys
 auth = tweepy.OAuth1UserHandler(API_KEY, API_KEY_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth, wait_on_rate_limit=True)
 
-# Provide reference to airnow.gov at the end of each tweet 
+# Provide reference to airnow.gov at the end of each tweet
 airnow = 'https://www.airnow.gov/?city=Missoula&state=MT&country=USA'
 
-def get_AQI(): 
-    # contact API endpoint 
+# helper function to return air quality category when passed an AQI value
+def get_category(aqi):
+    if aqi < 51:
+        return "good"
+    elif 50 < aqi < 101:
+        return "moderate"
+    elif 100 < aqi < 151:
+        return "unhealthy for sensitive groups"
+    elif 150 < aqi < 201:
+        return "unhealthy"
+    elif 200 < aqi < 301:
+        return "very unhealthy"
+    elif aqi > 300:
+        return "hazardous"
+    else:
+        return "<category_error>"
+
+
+def get_AQI():
+    # contact API endpoint
     response = requests.get('https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=59801&distance=25&API_KEY=664ACC75-2DBA-4812-A360-619F57BBA12A')
     data = response.json()
 
-    # response payload for each pollutant 
+    # response payload for each pollutant
     o3 = data[0]
     pm25 = data[1]
     pm10 = data[2]
 
-    # ensure response payload matches expected format 
+    # ensure response payload matches expected format
     if o3['ParameterName'] != 'O3' or pm25['ParameterName'] != 'PM2.5' or pm10['ParameterName'] != 'PM10':
         print("API returned unexpected payload!")
         sys.exit(-1)
@@ -169,7 +187,7 @@ def get_AQI():
     # dict containing pollutant, aqi as key, value
     all_polutants = {
         'Ozone': o3_aqi,
-        'PM 2.5' : pm25_aqi, 
+        'PM 2.5' : pm25_aqi,
         'PM 10' : pm10_aqi
     }
 
@@ -178,8 +196,8 @@ def get_AQI():
     # get the value corresponding to the top pollutant
     AQI = all_polutants[top_pollutant]
 
-    # format the tweet 
-    tweet = f'Current Missoula Air Quality Index is {AQI}. The major pollutant is {top_pollutant}. This measurement occurred at {latest_measure} {am_pm}. \n{airnow}'
+    # format the tweet
+    tweet = f'Current Missoula Air Quality Index is {AQI} ({get_category(AQI)}). The major pollutant is {top_pollutant}. This measurement occurred at {latest_measure} {am_pm}. \n{airnow}'
 
     return tweet
 
