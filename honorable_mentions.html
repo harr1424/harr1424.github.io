@@ -55,63 +55,104 @@
             </p>
             <pre>
                 <code>
+import tweepy
 import requests
-import re
+import time
+import sys
 import os
-from bs4 import BeautifulSoup
-from tqdm import tqdm
 
-target_url = # website to crawl
+API_KEY = os.environ['API_KEY']
+API_KEY_SECRET = os.environ['API_KEY_SECRET']
+ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+ACCESS_TOKEN_SECRET = os.environ['ACCESS_TOKEN_SECRET']
 
-parent_dir = # location to store files locally
+auth = tweepy.OAuth1UserHandler(consumer_key=API_KEY, consumer_secret=API_KEY_SECRET, access_token=ACCESS_TOKEN, access_token_secret=ACCESS_TOKEN_SECRET)
 
-headers = {
-'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:94.0) Gecko/20100101 Firefox/94.0',
-}
+api = tweepy.API(auth, wait_on_rate_limit=True)
 
-def crawl():
-    target_links = []
-    print("Crawling Main Page")
-    response = requests.get(target_url, headers=headers)
-    soup = BeautifulSoup(response.content, 'html5lib')
-    indirect_links = soup.find_all('a', {'href': re.compile(r'/en.*-.*/')})
-    authors = [link['href'] for link in indirect_links]
-    print("Crawling Secondary Pages")
-    for each in tqdm(authors):
-        response = requests.get(each, headers=headers)
-        soup = BeautifulSoup(response.content, 'html5lib')
-        download_links = soup.find_all('a', {'href': re.compile(r'.*.zip')})
-        for link in download_links:
-            target_links.append(link['href'])
-    target_links = list(set(target_links))
-    print(len(target_links), "Files available for download...")
-    return target_links
+# Provide reference to airnow.gov at the end of each tweet
+airnow = 'https://www.airnow.gov/?city=Missoula&state=MT&country=USA'
+
+# helper function to return air quality category when passed an AQI value
+def get_category(aqi):
+    if aqi < 51:
+        return "Good"
+    elif 50 < aqi < 101:
+        return "Moderate"
+    elif 100 < aqi < 151:
+        return "Unhealthy for Sensitive Groups"
+    elif 150 < aqi < 201:
+        return "Unhealthy"
+    elif 200 < aqi < 301:
+        return "Very Unhealthy"
+    elif aqi > 300:
+        return "Hazardous"
+    else:
+        return "<category_error>"
 
 
-    def download(target_links):
-        print("Beginning Downloads...")
-        for link in target_links:
-            author = link.split('/')[-2]
-            file_name = link.split('/')[-1]
-            dir_path = os.path.join(parent_dir, author)
-            if not os.path.exists(dir_path):
-                os.mkdir(dir_path)
-            file_path = os.path.join(dir_path, file_name)
-            if not os.path.isfile(file_path):
-                print("Downloading file:%s from %s" % (file_name, author))
-                response = requests.get(link, stream=True)
-                with open(file_path, "wb+") as f:
-                    for chunk in tqdm(response.iter_content(chunk_size=1024 * 1024)):
-                        if chunk:
-                            f.write(chunk)
-                print("%s downloaded!\n" % file_name)
-        print("All files downloaded!")
-        return
+def get_AQI():
+    # contact API endpoint
+    response = requests.get('https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=59801&distance=25&API_KEY=664ACC75-2DBA-4812-A360-619F57BBA12A')
+    data = response.json()
+
+    # response payload for each pollutant
+    o3 = data[0]
+    pm25 = data[1]
+    pm10 = data[2]
+
+    # ensure response payload matches expected format
+    if o3['ParameterName'] != 'O3' or pm25['ParameterName'] != 'PM2.5' or pm10['ParameterName'] != 'PM10':
+        print("API returned unexpected payload!")
+        sys.exit(-1)
+
+    # AQI for each pollutant
+    o3_aqi = data[0]['AQI']
+    pm25_aqi = data[1]['AQI']
+    pm10_aqi = data[2]['AQI']
+
+    # format time correctly
+    am_pm = 'PM' if o3['HourObserved'] > 11 else 'AM'
+    latest_measure = o3['HourObserved'] % 12
+    if latest_measure == 0 :
+        latest_measure = 12
+
+    # dict containing pollutant, aqi as key, value
+    all_polutants = {
+        'Ozone': o3_aqi,
+        'PM 2.5' : pm25_aqi,
+        'PM 10' : pm10_aqi
+    }
+
+    # get the top pollutant
+    top_pollutant = max(all_polutants, key=all_polutants.get)
+    # get the value corresponding to the top pollutant
+    AQI = all_polutants[top_pollutant]
+
+    # format the tweet
+    tweet = f'Current Missoula Air Quality Index is {AQI} ({get_category(AQI)}). The major pollutant is {top_pollutant}. This measurement occurred at {latest_measure} {am_pm}. \n{airnow}'
+
+    return tweet
+
+#print(get_AQI())
 
 
 if __name__ == "__main__":
-    links = crawl()
-    download(links)
+    while True:
+        try:
+            api.verify_credentials()
+            print("Authentication succeeded")
+            try:
+                api.update_status(status=get_AQI())
+            except Exception as e:
+                print(e)
+        except Exception as e:
+            print("Authentication failed")
+            print(e)
+        # run this script every 15 minutes
+        # duplicate tweets will be rejected by the Twitter API
+        time.sleep(3 * 60 * 60)
+
                 </code>
         </pre>
         </div>
