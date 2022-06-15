@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
+
+    <title>iOS Networking: Orange Weather</title>
+</head>
+
+<body>
+<div class="container">
+    <div class="row ">
+        <div class="dropdown">
+            <a class="btn btn-secondary btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                Portfolio Components
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item" href="index.html">Home</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="mobile_app_dev.html">Mobile Application Development</a></li>
+                <li><a class="dropdown-item" href="cloud_computing.html">Cloud Computing</a></li>
+                <li><a class="dropdown-item" href="3.html">Topic 3</a></li>
+                <li><a class="dropdown-item" href="4.html">Topic 4</a></li>
+                <li><a class="dropdown-item" href="5.html">Topic 5</a></li>
+                <li><a class="dropdown-item" href="honorable_mentions.html">Honorable Mentions</a></li>
+                <li><a class="dropdown-item" href="reflective_essay.html">Reflective Essay</a></li>
+                <li><a class="dropdown-item" href="CV.html">Cirriculum Vitae</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                <li><a class="dropdown-item" href="orange_weather.html">iOS Networking: Orange Weather</a></li>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="pt-5"></div>
+    <div class="row">
+        <h3>Orange Weather: A brief introduction to Swift</h3>
+        <p>
+            Orange Weather allows users to view current weather conditions as well as hourly and daily forecasts
+            at their current location. It's development process provided a great opportunity to learn more about
+            Swift, SwiftUI, and how to receive API data within an iOS app. Having previously created apps written in
+            Kotlin and Dart, a lot of the Swift syntax and functionality seemed familiar. All three languages are
+            strongly typed, differentiate between mutable and immutable variables, and provide a means of implementing
+            anonymous functions (known as <a href="https://docs.swift.org/swift-book/LanguageGuide/Closures.html">closures</a>
+            in Swift). Out of the three languages mentioned above, Swift quickly became my favorite as it has some
+            features that make life so much easier!
+        </p>
+        <p>
+            To start, I was delighted that similar to C++, Swift allows for object-oriented programming through the use of
+            not only classes, but also structs. In Swift, both structs and classes are used to create objects that
+            contain members and/or functions related in some way. Classes are able to inherit attributes from other classes,
+            but inheritance is not a capability among structs. Structs are also said to be immutable, meaning that if a
+            given struct is modified, instead of changing a variable at a location in memory allocated to the struct,
+            an entirely new struct will be created with the updated variable. An example of this is below:
+        </p>
+        <code>
+            <pre>
+            struct Cat {
+                let _class = "Mammal" // _class is immutable, a spoecies can't change class
+                var paws: Int
+                var tail: Bool
+                var color: String
+            }
+
+            var CremePuff = Cat(paws: 4, tail: true, color: "beige")
+            CremePuff.paws = 3 // Creampuff will be copied and the variable paws set to 3 in the fresh copy
+
+            let Granpa = Cat(paws: 4, tail: true, color: "unknown")
+            Granpa.color = "black" // this will not compile because Granpa was defined as immutable using the let keyword
+            </pre>
+        </code>
+
+        <P>
+            <a href="https://en.wikipedia.org/wiki/Creme_Puff_(cat)">Who are CremePuff and Granpa?</a>
+        </P>
+
+        <p>
+            Another very welcome feature in Swift is the ability to <i>extend</i> types (either built-in or custom) through
+            the use of <a href="https://docs.swift.org/swift-book/LanguageGuide/Extensions.html">extensions</a>. Since structs
+            are a type, this allows us to extend the functionality of our structs in situations where this is desirable,
+            and by using the <code>private</code> keyword, we can contain the effect this extension has within a single
+            module.
+        </p>
+        <code>
+            <pre>
+                extension Cat {
+                    func meow() {
+                         print("Meow")
+                        }
+                    }
+
+                Granpa.meow()
+            </pre>
+        </code>
+
+        <p>
+            The code above will print: <code>Meow</code>
+        </p>
+    </div>
+    <div class="row">
+        <h3>Orange Weather: First Impressions of SwiftUI</h3>
+
+
+
+
+
+
+
