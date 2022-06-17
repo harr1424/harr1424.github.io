@@ -46,24 +46,33 @@
     <div class="pt-5"></div>
     <div class="row">
         <h3>Orange Weather: A brief introduction to Swift</h3>
-        <p>
-            Orange Weather allows users to view current weather conditions as well as hourly and daily forecasts
-            at their current location. It's development process provided a great opportunity to learn more about
-            Swift, SwiftUI, and how to receive API data within an iOS app. Having previously created apps written in
-            Kotlin and Dart, a lot of the Swift syntax and functionality seemed familiar. All three languages are
-            strongly typed, differentiate between mutable and immutable variables, and provide a means of implementing
-            anonymous functions (known as <a href="https://docs.swift.org/swift-book/LanguageGuide/Closures.html">closures</a>
-            in Swift). Out of the three languages mentioned above, Swift quickly became my favorite as it has some
-            features that make life so much easier!
-        </p>
-        <p>
-            To start, I was delighted that similar to C++, Swift allows for object-oriented programming through the use of
-            not only classes, but also structs. In Swift, both structs and classes are used to create objects that
-            contain members and/or functions related in some way. Classes are able to inherit attributes from other classes,
-            but inheritance is not a capability among structs. Structs are also said to be immutable, meaning that if a
-            given struct is modified, instead of changing a variable at a location in memory allocated to the struct,
-            an entirely new struct will be created with the updated variable. An example of this is below:
-        </p>
+        <div class="col-md-g">
+            <p>
+                Orange Weather allows users to view current weather conditions as well as hourly and daily forecasts
+                at their current location. It's development process provided a great opportunity to learn more about
+                Swift, SwiftUI, and how to receive API data within an iOS app. Having previously created apps written in
+                Kotlin and Dart, a lot of the Swift syntax and functionality seemed familiar. All three languages are
+                strongly typed, differentiate between mutable and immutable variables, and provide a means of
+                implementing
+                anonymous functions (known as <a href="https://docs.swift.org/swift-book/LanguageGuide/Closures.html">closures</a>
+                in Swift). Out of the three languages mentioned above, Swift quickly became my favorite as it has some
+                features that make life so much easier!
+            </p>
+            <p>
+                To start, I was delighted that similar to C++, Swift allows for object-oriented programming through the
+                use
+                of
+                not only classes, but also structs. In Swift, both structs and classes are used to create objects that
+                contain members and/or functions related in some way. Classes are able to inherit attributes from other
+                classes,
+                but inheritance is not a capability among structs. Structs are also said to be immutable, meaning that
+                if a
+                given struct is modified, instead of changing a variable at a location in memory allocated to the
+                struct,
+                an entirely new struct will be created with the updated variable. An example of this is below:
+            </p>
+        </div>
+
         <code>
             <pre>
             struct Cat {
@@ -88,8 +97,10 @@
         </P>
 
         <p>
-            Another very welcome feature in Swift is the ability to <i>extend</i> types (either built-in or custom) through
-            the use of <a href="https://docs.swift.org/swift-book/LanguageGuide/Extensions.html">extensions</a>. Since structs
+            Another very welcome feature in Swift is the ability to <i>extend</i> types (either built-in or custom)
+            through
+            the use of <a href="https://docs.swift.org/swift-book/LanguageGuide/Extensions.html">extensions</a>. Since
+            structs
             are a type, this allows us to extend the functionality of our structs in situations where this is desirable,
             and by using the <code>private</code> keyword, we can contain the effect this extension has within a single
             module.
@@ -112,10 +123,40 @@
     </div>
     <div class="row">
         <h3>Orange Weather: First Impressions of SwiftUI</h3>
+        <p>
+            SwiftUI was released by Apple in 2019 as an updated way to build user interfaces in a declarative form.
+            Apple has invested heavily in developing and promoting the adoption of SwiftUI as it provides a way to
+            design
+            user interfaces across all Apple devices (as opposed to selecting UIKit for iOS devices or AppKit for Mac
+            OS X). SwiftUI contains all of the same user interface (UI) elements I became familiar using in Storyboard
+            layouts such as `UIButton` and `UITableView` but provides for a different way of implementing these elements
+            within an app.
+        </p>
+        <p>
+            It might just be me, but it seems like declarative programming frameworks have been gaining a lot of
+            momentum
+            over the past several years. Android also released a declarative framework for building apps called
+            <a href="https://developer.android.com/jetpack/compose">Jetpack Compose</a> in 2019. Declarative programming
+            describes a modaility of programming where the desired outcome is described using code, and a compiler or
+            framework is responsible for accomplishing this outcome. Imperative programming refers to a programmer
+            explicitly
+            specifying how to accomplish an outcome in a step-by-step process. Previously, I have used
+            <a href="https://www.terraform.io/">Terraform></a> to provision cloud infrastructure, and so the declarative
+            concept was a familiar one.
+        </p>
+        <p>
+            In addition to providing a cross platofrm means of defining application layouts using a declarative framkework,
+            SwiftUI also simplifies application state management. The state of an application
+            can change very rapidly, especially in apps that are performing work with data retrieved from internet.
+            SwiftUI abstracts away much of an application's state management, and
+            this will be explored in greater detail below. Additionally, SwiftUI is
+            <a href="https://developer.apple.com/xcode/swiftui/">constantly being updated</a> in order to
+            provide improved access to Apple APIs.
+        </p>
 
 
-
-
-
-
-
+    </div>
+</div>
+<div style="text-align: center">
+    <h3><a href="#">Top Of Page</a></h3>
+</div>
