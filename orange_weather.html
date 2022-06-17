@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+
+    <link rel="stylesheet" href="style.css">
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -153,8 +156,301 @@
             <a href="https://developer.apple.com/xcode/swiftui/">constantly being updated</a> in order to
             provide improved access to Apple APIs.
         </p>
+    </div>
+    <div class="row">
+        <h3>Orange Weather: The App</h3>
+        <div class="col-md-6">
+            <ul>
+                <li>
+                    The entry point to the application is stored in a struct named <code>Orange_WeatherApp</code>.
+                </li>
+                <li>
+                    This struct is annotated with <code>@main</code> to identify it as the main view
+                </li>
+                <li>
+                    This struct is used to inform the app to display <code>MainWeatherView</code> once the app is initialized
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <code>
+                <pre>
+import SwiftUI
+
+@main
+struct Orange_WeatherApp: App {
+    var body: some Scene {
+        WindowGroup {
+            MainWeatherView()
+        }
+    }
+}
+                </pre>
+            </code>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+        <ul>
+            <li>
+                The <code>MainWeatherView</code> struct is the initial point of entry that a user has with the app. As
+                such it has been designed to respond immediately if a user is not connected to the internet or if
+                they have not granted location permissions to the app. In order to perform these checks, methods
+                have been defined in two classes <code>Networking</code> and <code>NetworkStatus</code>.
+            </li>
+            <li>
+                <code>Networking</code> will be examined in detail below, but contains members and methods which are
+                related to device location, permissions, and requesting information from the OpenWeather API.
+            </li>
+            <li>
+                <code>NetworkStatus</code> contains members and methods solely related to the connectivity status
+                of the device.
+            </li>
+            <li>
+                Both instances have been annotated as <code>@StateObject</code>. SwiftUI allows structs and classes
+                to publish members which can then be observed by other structs or classes. If a struct or class
+                observes an object that it instantiates, the <code>@StateObject</code> annotation should be used. If an
+                observable object is then later passed into another class, that referencing class should annotate the
+                observed object with the <code>ObservedObject</code> annotation.
+            </li>
+            <li>
+                Apple provides the <code>CLLocationManager</code> API that developers can use to interface with a
+                device location. This API sends and receives  location information using the
+                <code>CLLocationDegrees</code> data type.
+            </li>
+            <li>
+                The <code>update()</code> helper method is used to perform API requests anytime the UI should be updated
+                to show the most recent weather data.
+            </li>
+            <li>
+                In SwiftUI, a <code>View</code> is a protocol. Structs and classes are said to <i>conform</i> to
+                protocols. (Protocols are analagous to interfaces in Java and Kotlin).
+                In order for a given view to conform to the <code>View</code> protocol, it must implement a variable
+                named <code>body</code> which describes the view.
+            </li>
+            <li>
+                The declaration <code>var body: some View { ...</code> may seem confusing at first. This declaration
+                defines the <code>body</code> attribute necessary for <code>MainWeatherView</code> to conform to the
+                <ciode>View</ciode> protocol. But since <code>body</code> is a variable and not a class, struct, or
+                enumeration, the syntax <code>var body: some View</code> means that the variable <code>body</code>
+                 is <i>some</i> type of view. It could be a <code>UITextView</code>, a <code>UITableView</code>, or
+                any other type of view, but declaring its type as a <code>View</code> is essential for the compiler operations
+                that allow SwiftUI to update UI elements so quickly.
+            </li>
+            <li>
+                Immediately upon the view being displayed, Orange Weather checks to see if the user device is connected
+                to the internet, and if it is not, an error message will be shown to the user explaining why an
+                internet connection is required.
+            </li>
+            <li>
+                A similar check is performed for location based permissions. Orange Weather requires a user's location
+                in order to obtain current weather information at that location. Thus, at a minimum, a user must
+                grant permission to the app to access device location while the app is in use. The first time that the app
+                runs on a user device, they will be prompted with the following: <br><br>
+
+                <img src="images/OrangeWeather/loc.png" alt="Location permission prompt" width="400" class="center">
+
+            </li>
+            <li>
+                If they fail to select "Allow Once" or "Allow While Using App" a view describing the problem will be
+                shown. This view is visible in tha background until the user makes a decision.
+            </li>
+            <li>
+                The UI content which is intended to be displayed assuming a device is connected to the internet and
+                a user grants the necessary permissions has been wrapped inside a <code>NavigationView</code> which
+                has several benefits:
+                <ul>
+                    <li>
+                        Each navigation screen is now given a title, and in the case of the main view I have programmatically
+                        set the title to match the current device location
+                    </li>
+                    <li>
+                        Subsequent views navigated to will also be assigned titles, and a back arrow will appear
+                        at the top of the screen next to the title allowing the user to easily navigate back to the
+                        main view.
+                    </li>
+                    <li>
+                        NavigationViews provide a lot of accessibility configuration options to make navigating the app
+                        easier for all persons.
+                    </li>
+                </ul>
+            </li>
+            <li>
+                If all goes well, our application should quickly load the following View: <br><br>
+                <img src="images/OrangeWeather/mainView.png" alt="Location permission prompt" width="400" class="center">
+
+            </li>
+        </ul>
+        </div>
+        <div class="col-md-6">
+            <code>
+                <pre>
+import SwiftUI
+import CoreLocation
+
+/* The initial View shown in the application. From here, a user
+ is able to see current weather information as well as navigate to other
+ views of the app. If a user is not connected to the internet, or
+ has not granted location permissions to this app, the view will
+ display an error message. */
+struct MainWeatherView: View {
+
+    /* State objects are used here as opposed to ObservedObjetcs since
+     these objects are being instantiated in this class*/
+
+    @StateObject var network = Networking()  // object containing location and weather information
+    @StateObject var networkConn = NetworkStatus()  // object containing network connectivity status
+
+    var lat: CLLocationDegrees {
+        return self.network.lastLocation?.coordinate.latitude ?? 0
+    }
+
+    var lon: CLLocationDegrees {
+        return self.network.lastLocation?.coordinate.longitude ?? 0
+    }
+
+    var locationString: String {
+        return self.network.locationString?.name ?? "Orange Weather"
+    }
+
+    func update(lat: CLLocationDegrees, lon: CLLocationDegrees) {
+        self.network.getLocationString(lat, lon)
+        self.network.getMainWeather(lat, lon)
+        self.network.getAQI(lat, lon)
+    }
 
 
+    var body: some View {
+
+        // If a user is not connected to the internet
+        if !networkConn.isConnected {
+            Image(systemName: "antenna.radiowaves.left.and.right")
+                .resizable()
+                .aspectRatio( contentMode: .fit)
+                .scaleEffect(0.75)
+                .foregroundColor(.blue)
+            Text("""
+            You currently are not connected to the internet. Please connect to Wi-Fi or cellular data in order to use this app.
+            """)
+            .fontWeight(.bold)
+            .font(.system(size: 24))
+            .foregroundColor(.blue)
+            .multilineTextAlignment(.center)
+            .padding()
+        }
+
+        // If a user has not granted location permissions while the app is in use
+        else if !network.permissions {
+            Image(systemName: "tornado")
+                .resizable()
+                .aspectRatio( contentMode: .fit)
+                .scaleEffect(0.75)
+                .foregroundColor(.blue)
+            Text("""
+            This app requires permission to access your location while the app is in use. It will not work otherwise. Your location
+            data is never shared with nor stored by the developer. Please grant location permissions to this app from the settings menu.
+            """)
+            .fontWeight(.bold)
+            .font(.system(size: 24))
+            .foregroundColor(.blue)
+            .multilineTextAlignment(.center)
+            .padding()
+
+        } else {  // Display the intended view
+
+            NavigationView {
+                VStack {
+                    if let response = network.weatherResponse {
+                        Image(systemName: WeatherModel.getConditionName(weatherID: (response.current.weather[0].id)))
+                            .resizable()
+                            .aspectRatio( contentMode: .fit)
+                            .scaleEffect(0.75)
+                            .foregroundColor(WeatherModel.getIconColor(weatherID: response.current.weather[0].id))
+                    }
+
+                    HStack {
+
+                        VStack{
+                            Text("Temperature")
+                                .fontWeight(.bold)
+                                .font(.system(size: 24))
+                            Text("Wind")
+                                .fontWeight(.bold)
+                                .font(.system(size: 24))
+                            Text("Humidity")
+                                .fontWeight(.bold)
+                                .font(.system(size: 24))
+                            Text("Dew Point")
+                                .fontWeight(.bold)
+                                .font(.system(size: 24))
+                            Text("UV Index")
+                                .fontWeight(.bold)
+                                .font(.system(size: 24))
+                            Text("Air Quality")
+                                .fontWeight(.bold)
+                                .font(.system(size: 24))
+                            Spacer()
+                        }
+
+                        VStack {
+                            if let response = network.weatherResponse {
+                                Text("\(response.current.temp, specifier: "%.0f")°F")
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 24))
+                                Text("\(response.current.wind_speed, specifier: "%.0f") mph from \(WeatherModel.getWindDirection(degree: response.current.wind_speed))")
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 24))
+                                Text("\(response.current.humidity, specifier: "%.0f") %")
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 24))
+                                Text("\(response.current.dew_point, specifier: "%.2f") °F")
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 24))
+                                Text("\(response.current.uvi, specifier: "%.0f")  \(WeatherModel.getUvIndexCategory(uvIndex: response.current.uvi))")
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 24))
+                            }
+                            if let response = network.currAQI {
+                                Text(WeatherModel.getAQIstring(aqi: response.list[0].main.aqi))
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 24))
+                            }
+                            Spacer()
+                        }
+                    }
+                    HStack {
+                        NavigationLink(destination: HourlyWeatherView(hourly: network.weatherResponse?.hourly)) {
+                            ButtonView(text: "Hourly")
+                        }
+                        NavigationLink(destination: WeatherAlertView(alerts: network.weatherResponse?.alerts)) {
+                            ButtonView(text: "Alerts")
+                        }
+                        NavigationLink(destination: DailyWeatherView(daily: network.weatherResponse?.daily)) {
+                            ButtonView(text: "Daily")
+                        }
+                    }
+                }
+                .navigationTitle(locationString)
+                .environmentObject(network)
+                .onAppear {
+                    /* Depending upon netowrk latency, the weather information, location string, and air quality index
+                     may not have been retrieved and/or decoded by the time the view appears. If lat and lon are still nil,
+                     update the UI*/
+                    if lat == 0 && lon == 0 {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                            self.update(lat: lat, lon: lon)
+                        })
+                    }
+                    self.update(lat: lat, lon: lon)
+                }
+            }
+        }
+    }
+}
+
+                </pre>
+            </code>
+        </div>
     </div>
 </div>
 <div style="text-align: center">
