@@ -48,7 +48,7 @@
     </div>
     <div class="pt-5"></div>
     <div class="row">
-        <h3>Orange Weather: A brief introduction to Swift</h3>
+        <h3>A Brief Introduction to Swift</h3>
         <div class="col-md-g">
             <p>
                 Orange Weather allows users to view current weather conditions as well as hourly and daily forecasts
@@ -124,8 +124,9 @@
             The code above will print: <code>Meow</code>
         </p>
     </div>
+    <div class="pt-5"></div>
     <div class="row">
-        <h3>Orange Weather: First Impressions of SwiftUI</h3>
+        <h3>First Impressions of SwiftUI</h3>
         <p>
             SwiftUI was released by Apple in 2019 as an updated way to build user interfaces in a declarative form.
             Apple has invested heavily in developing and promoting the adoption of SwiftUI as it provides a way to
@@ -157,6 +158,7 @@
             provide improved access to Apple APIs.
         </p>
     </div>
+    <div class="pt-5"></div>
     <div class="row">
         <h3>Orange Weather: The App</h3>
         <div class="col-md-6">
@@ -446,6 +448,305 @@ struct MainWeatherView: View {
             }
         }
     }
+}
+
+                </pre>
+            </code>
+        </div>
+    </div>
+    <div class="pt-5"></div>
+    <div class="row">
+        <h3>Additional Views:</h3>
+        <p>
+            Orange Weather's <code>MainWeatherView</code> displays current weather information and also links to additional views describing
+            the hourly forecast, daily forecast, and any currently issued weather alerts. To implement these secondary views,
+            it is first necessary to define them as a <code>struct</code> specifying what information is shown in each
+            view. This process is shown below for an <code>HourlyView</code> (below left). Once
+            <code>HourlyView</code> has been defined, it is then possible to create a list of <code>HourlyView</code> views
+            useful for displaying many forecasted hourly conditions, each displayed in their own view. The process of
+            creating this <code>List</code> view is shown below on the right.
+        </p>
+        <div class="col-md-6">
+            <code>
+                <pre>
+/* A View used to display weather infromation specific to a given hour.
+ Multiple HourlyView Views will be displayed in a list. */
+
+struct HourlyView: View {
+    let calendar = Calendar.current
+    var hourly: Hourly
+
+    var body: some View {
+        HStack {
+            VStack {
+                Spacer()
+                Text("\(WeatherModel.getWeekDay(day: Int(calendar.component(.weekday, from: NSDate(timeIntervalSince1970: TimeInterval(hourly.dt)) as Date))))")
+                    .fontWeight(.bold)
+                Text("\(WeatherModel.getTimeAs12hr(hour: Int(calendar.component(.hour, from: NSDate(timeIntervalSince1970: TimeInterval(hourly.dt)) as Date))))")
+                    .fontWeight(.bold)
+                Spacer()
+                Text("\(hourly.temp, specifier: "%.0f")°F")
+                    .fontWeight(.bold)
+                Spacer()
+            }
+            Image(systemName:  WeatherModel.getConditionName(weatherID: hourly.weather[0].id))
+                .resizable()
+                .aspectRatio( contentMode: .fit)
+                .scaleEffect(0.75)
+                .foregroundColor(WeatherModel.getIconColor(weatherID: hourly.weather[0].id))
+            VStack {
+                Spacer()
+                Text("Wind \(hourly.wind_speed, specifier: "%.0f") mph \(WeatherModel.getWindDirection(degree: hourly.wind_deg))")
+                Spacer()
+                Text("\(hourly.pop * 100, specifier: "%.0f")% chance of \(WeatherModel.getRainorSnow(temp: hourly.temp))")
+                Spacer()
+            }
+        }
+    }
+}
+                </pre>
+            </code>
+        </div>
+        <div class="col-md-6">
+            <code>
+                <pre>
+/* A View describing the hourly forecast for a given location. */
+
+struct HourlyWeatherView: View {
+
+    var hourly: [Hourly]?
+
+    var body: some View {
+        if let currHourly = hourly {
+            List(currHourly) { forecast in
+                HourlyView(hourly: forecast)
+            }
+            .navigationTitle("Hourly")
+
+        } else {
+            Image(systemName: "questionmark")
+                .resizable()
+                .aspectRatio( contentMode: .fit)
+                .scaleEffect(0.75)
+                .foregroundColor(.blue)
+            Text("Something went wrong... ")
+                .fontWeight(.bold)
+                .font(.system(size: 24))
+                .foregroundColor(.blue)
+                .multilineTextAlignment(.center)
+            Spacer()
+                .navigationTitle("Hourly")
+        }
+    }
+}
+                </pre>
+            </code>
+        </div>
+        <p>
+            This same process of defining a base view and then creating a <code>List</code> consisting of base views has
+            been repeated for both <code>AlertView</code> and <code>DailyView</code> views. Full source code can be
+            found on the project's <a href="https://github.com/harr1424/Orange-Weather">GitHub repository</a>.
+        </p>
+        <div class="col-md-4">
+            <img src="images/OrangeWeather/hourly.png" alt="List of HourlyView views composing an hourly forecast view"
+                 width="350" class="center">
+        </div>
+        <div class="col-md-4">
+            <img src="images/OrangeWeather/alerts.png" alt="List of HourlyView views composing an hourly forecast view"
+                 width="350" class="center">
+        </div>
+        <div class="col-md-4">
+            <img src="images/OrangeWeather/daily.png" alt="List of DailyView views composing an daily forecast view"
+                 width="350" class="center">
+        </div>
+    </div>
+    <div class="pt-5"></div>
+    <div class="row">
+        <h3>Networking: </h3>
+        <p>
+            The most difficult part of creating Orange Weather involved retrieving a device's current location and
+            using this location in subsequent API calls. The class examined below contains logic to accomplish this:
+        </p>
+        <div class="col-md-6">
+            <ul>
+                <li>
+                    Our networking class needs to expose the results of its API calls. This is done by annotating
+                    the objects that will be observed in the UI by using the <code>@Published</code> annotation. Note that
+                    these objects have been defined in a separate file, which will be examined later. Most importantly, when
+                    defining these objects as structs, they must conform to the <code>Observable Object</code>
+                    protocol in order to be published and observed.
+                </li>
+                <li>
+                    THe overridden <code>init()</code> method is responsible for setting the location manager delegate
+                    property to be itself. <a href="https://en.wikipedia.org/wiki/Delegation_pattern"> The delegae pattern</a>
+                     is very common in iOS development, and many of Apple's APIs implement this pattern. Effectively,
+                    by setting the current class as the location manager delegate, we are allowing this class to respond to
+                    permission changes, handle errors, respond to location events, and in general control the functioning
+                    of the <code>CLLocationManager</code> API instance. Also in <code>init()</code>, the desired location
+                    is set to an area reasonable for obtaining accurate weather data, adequate permissions are requested
+                    of the user, and the instance is instructed to begin updating the user's location.
+                </li>
+                <li>
+                    It is essential to account for the location permissions currently granted to Orange Weather by the user.
+                    If the user has not granted adequate permissions, our API calls will not return data in the expected
+                    format and if this is not handled our app will crash. We will explore additional ways to
+                    gracefully handle an unexpected API response, but only calling API endpoints once we are certain that
+                    a device has the correct lat lon coordinates is an important first step.
+                </li>
+                <li>
+                    The first time a user launches Orange Weather, the location permissions granted to the app are
+                    <code>.notDetermined</code>. Hopefully, the user grants permission to the app to access device location
+                    while the app is in use, but this will take a few moments. Once a user has decided whether or not to
+                    grant permissions, the <code>didChangeAuthorizations</code> method will be called, which will in turn
+                    update the variables in <code>Networking</code> responsible for tracking current permission status.
+                </li>
+                <li>
+                    Once the instance of <code>CLLocatinManager</code> updates the <code>lastLocation</code> property the
+                    method <code>didUpdateLocations</code> will be called. Since our <code>Networking</code> cass is set
+                    as the delegate for this instance, we are able to define what should happen once location has been updated.
+                    Here, we have instructed the app to perform API calls that will update the published properties
+                    that are being observed in the UI. Once this completes, we instruct <code>CLLocationManager</code> to
+                    stop updating the device location. If we did not do this, the app would continuously update the device
+                    location every few seconds and perform three API calls each time, and so we would quickly exceed
+                    our limited available API calls (OpenWeather limits to 60 API calls per minute at their free tier).
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <code>
+                <pre>
+class Networking: NSObject, ObservableObject, CLLocationManagerDelegate {
+
+    @Published var weatherResponse: WeatherResponse?
+    @Published var locationString: LocationResponse?
+    @Published var currAQI: AQIresponse?
+
+    private let locationManager = CLLocationManager()
+    @Published var locationStatus: CLAuthorizationStatus?
+    @Published var lastLocation: CLLocation?
+
+    override init() {
+        super.init()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+    }
+
+    var statusString: String {
+        guard let status = locationStatus else {
+            return "unknown"
+        }
+
+        switch status {
+        case .notDetermined: return "notDetermined"
+        case .authorizedWhenInUse: return "authorizedWhenInUse"
+        case .authorizedAlways: return "authorizedAlways"
+        case .restricted: return "restricted"
+        case .denied: return "denied"
+        default: return "unknown"
+        }
+    }
+
+    var permissions: Bool {
+        switch statusString {
+        case "notDetermined": return false
+        case "authorizedWhenInUse": return true
+        case "authorizedAlways": return true
+        case "restricted": return false
+        case "denied": return false
+        default: return false
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        locationStatus = status
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        lastLocation = location
+        getMainWeather(self.lastLocation?.coordinate.latitude ?? 0, self.lastLocation?.coordinate.longitude ?? 0)
+        getLocationString(self.lastLocation?.coordinate.latitude ?? 0, self.lastLocation?.coordinate.longitude ?? 0)
+        getAQI(self.lastLocation?.coordinate.latitude ?? 0, self.lastLocation?.coordinate.longitude ?? 0)
+        locationManager.stopUpdatingLocation()
+    }
+
+    func getMainWeather(_ lat: CLLocationDegrees, _ lon: CLLocationDegrees) {
+        if let loc = URL(string: "https://api.openweathermap.org/data/2.5/onecall?appid=REDACTED&exclude=minutely&units=imperial&lat=\(lat)&lon=\(lon)") {
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: loc) { data, response, error in
+                if error == nil {
+                    let decoder = JSONDecoder()
+                    if let safeData = data {
+                        do {
+                            let results = try decoder.decode(WeatherResponse.self, from: safeData)
+                            DispatchQueue.main.async {
+                                self.weatherResponse = results
+                            }
+                            print("weatherResponse was succesfully updated for \(lat) \(lon)")
+                        } catch {
+                            print(error)
+                        }
+                    }
+                } else {
+                    print(error!)
+                }
+            }
+            task.resume()
+        }
+    }
+
+    func getLocationString(_ lat: CLLocationDegrees, _ lon: CLLocationDegrees) {
+        if let loc = URL(string: "https://api.openweathermap.org/data/2.5/weather?appid=REDACTED&exclude=minutely&units=imperial&lat=\(lat)&lon=\(lon)") {
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: loc) { data, response, error in
+                if error == nil {
+                    let decoder = JSONDecoder()
+                    if let safeData = data {
+                        do {
+                            let results = try decoder.decode(LocationResponse.self, from: safeData)
+                            DispatchQueue.main.async {
+                                self.locationString = results
+                            }
+                            print("Location was succesfully updated for \(lat) \(lon)")
+                        } catch {
+                            print(error)
+                        }
+                    }
+                } else {
+                    print(error!)
+                }
+            }
+            task.resume()
+        }
+    }
+
+    func getAQI(_ lat: CLLocationDegrees, _ lon: CLLocationDegrees) {
+        if let loc = URL(string: "https://api.openweathermap.org/data/2.5/air_pollution?appid=REDACTED&exclude=minutely&lat=\(lat)&lon=\(lon)") {
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: loc) { data, response, error in
+                if error == nil {
+                    let decoder = JSONDecoder()
+                    if let safeData = data {
+                        do {
+                            let results = try decoder.decode(AQIresponse.self, from: safeData)
+                            DispatchQueue.main.async {
+                                self.currAQI = results
+                            }
+                            print("AQI was succesfully updated for \(lat) \(lon)")
+                        } catch {
+                            print(error)
+                        }
+                    }
+                } else {
+                    print(error!)
+                }
+            }
+            task.resume()
+        }
+    }
+
 }
 
                 </pre>
