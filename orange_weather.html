@@ -958,12 +958,156 @@ struct Weather: Decodable{
     <div class="pt-5"></div>
     <div class="row">
         <h3>Helper Methods and UI Improvements</h3>
+        <div class="col-md-6">
+            <ul>
+                <li>
+                    One way to enhance user experience is to provide a graphic representation of weather conditions
+                    either in a forecast or currently as shown on <code>MainWeatherView</code>. This is something
+                    common in many weather apps.
+                </li>
+                <li>
+                    I have done this by making use of <i>SF Symbols (San Fransisco Symbols</i>, a collection of
+                    icons Apple provides for use in developing iOS and Mac OS apps.
+                </li>
+                <li>
+                    A switch statements is used to determine which SF Symbol to display based upon the value
+                    received from the API response contained in the element <code>id</code> that we examined above.
+                </li>
+            </ul>
+
+        </div>
+        <div class="col-md-6">
+            <code>
+                <pre>
+    /* Given an integer representing a weather condition,
+     will return a String corresponding to an SF Symbol to be displayed. */
+
+    static func getConditionName(weatherID: Int) -> String {
+        switch weatherID {
+        case 200..<300:
+            return "cloud.bolt.rain.fill"
+        case 300..<400:
+            return "cloud.drizzle.fill"
+        case 500..<600:
+            return "cloud.rain.fill"
+        case 600..<700:
+            return "cloud.snow.fill"
+        case 701:
+            return "cloud.fog.fill"
+        case 711:
+            return "smoke.fill"
+        case 721:
+            return "sun.haze.fill"
+        case 731:
+            return "sun.dust.fill"
+        case 741:
+            return "cloud.fog.fill"
+        case 751:
+            return "sun.dust.fill"
+        case 761:
+            return "sun.dust.fill"
+        case 762:
+            return "sun.dust.fill"
+        case 771:
+            return "wind"
+        case 781:
+            return "tornado"
+        case 800...802:
+            return "sun.max.fill"
+        case 803...804:
+            return "cloud.sun.fill"
+        default:
+            return "questionmark"
+        }
+    }
+                </pre>
+            </code>
+        </div>
+        <div class="col-md-6">
+            <ul>
+                <li>
+                    The API endpoint responsible for sending information about air quality sends this information as
+                    an integer value. It would be a very poor user experience to see something like: <code>
+                    Current Air Quality: 5 </code> when in fact the air quality they are experiencing is among the worst
+                    in the entire world. We can define helper methods that will allow us to programmatically give the
+                    user context about the current air quality.
+                </li>
+                <li>
+                    <code>getAQIstring</code> will return a string representation of the current air quality and this
+                    string representation will be used within a Text view to provide easy to understand information
+                    about the air quality
+                </li>
+                <li>
+                    Additionally, we can programmatically assign a color to the text color used in
+                    <code>MainWeatherView</code>, changing text color to orange, red, and purple as the air quality
+                    progressively worsens
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <code>
+                <pre>
+    /* Given an Integer representing the current Air Quality Index, will return
+     a String description of the current index. */
+
+    static func getAQIstring(aqi: Int) -> String {
+        switch aqi {
+        case 1: return "Good"
+        case 2: return "Fair"
+        case 3: return "Moderate"
+        case 4: return "Poor"
+        case 5: return "Very Poor"
+        default: return "Not Available"
+        }
+    }
+
+    /* Given an Integer representing the current Air Quality Index, will return
+     a color representation of the current index. */
+
+    static func getAQIColor(aqi: Int) -> Color {
+        switch aqi {
+        case 1: return .primary
+        case 2: return .primary
+        case 3: return .orange
+        case 4: return .red
+        case 5: return .purple
+        default: return .primary
+        }
+    }
+                </pre>
+            </code>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <img src="images/OrangeWeather/aqi_Jakarta.png"
+                 alt="List of HourlyView views composing an hourly forecast view"
+                 width="350" class="center">
+        </div>
+        <div class="col-md-4"></div>
+        <div class="pt-5"></div>
         <p>
-
+            As demonstrated in the above screenshot, something similar can be done with UV Index and any other UI
+            element.
         </p>
+        <p>
+            That;s it! This project allowed me to learn so much about Swift and Apple iOS APIs. If you would like to
+            explore Orange Weather, you may find it on the Apple App Store at the link below:
+        </p>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+        <p>
+            <a href="https://apps.apple.com/af/app/orange-weather/id1628082792?itsct=apps_box_badge&amp;itscg=30200"
+               style="display: inline-block; overflow: hidden; border-radius: 13px; width: 400px; height: 83px;"><img
+                    src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1654473600&h=e11a51c6fb5651706cd40c639650960b"
+                    alt="Download on the App Store" style="border-radius: 13px; width: 400px; height: 83px;"></a>
+        </p>
+        </div>
+        <div class="col-md-4"></div>
     </div>
-
+    <div class="pt-5"></div>
+    <div class="pt-5"></div>
 </div>
+
 <div style="text-align: center">
     <h3><a href="#">Top Of Page</a></h3>
 </div>
