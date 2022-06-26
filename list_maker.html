@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
+
+    <title>iOS Data Persistence: List Maker</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row ">
+            <div class="dropdown">
+                <a class="btn btn-secondary btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Portfolio Components
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="index.html">Home</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="mobile_app_dev.html">Mobile Application Development</a></li>
+                    <li><a class="dropdown-item" href="cloud_computing.html">Cloud Computing</a></li>
+                    <li><a class="dropdown-item" href="3.html">Topic 3</a></li>
+                    <li><a class="dropdown-item" href="4.html">Topic 4</a></li>
+                    <li><a class="dropdown-item" href="5.html">Topic 5</a></li>
+                    <li><a class="dropdown-item" href="reflective_essay.html">Reflective Essay</a></li>
+                    <li><a class="dropdown-item" href="CV.html">Cirriculum Vitae</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    <li><a class="dropdown-item" href="orange_weather.html">iOS Networking: Orange Weather</a></li>
+                    <li><a class="dropdown-item" href="honorable_mentions.html">Honorable Mentions</a></li>
+
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="pt-5"></div>
+        <div class="row">
+            <h3>iOS Data Persistence</h3>
+            <p>
+                I originally created <a href="/mobile_app_dev.html">List Maker</a> as an Android application in order to
+                better
+                understand the Androud Room library which is used to persist data in a SQL database. The application is
+                straightforward,
+                users are able to create a parent list of items wherein each item is capable of navigating to a child
+                list of items associated
+                with the parent item. For example, the main list displayed in the app may contain an item named
+                <code>Groceries</code> which when
+                tapped on, will navigate to a child list containing items such as <code>Milk, Eggs, Spinach</code>.
+            </p>
+            <p>
+                When researching how to persist data on iOS devices, I initially learned about <a
+                    href="https://developer.apple.com/documentation/coredata">Core Data</a>.
+                While Core Data initially seemed like a perfect solution for saving user created data, I ultimately
+                decided to use
+                <a href="https://realm.io/best-ios-database/#overview">realm by MongoDB</a> instead. The main reason for
+                my decision was that the
+                documentation existing for realm was far superior to the documentation for Core Data.
+            </p>
+            <p>
+                The first step was to define a data type that not only supported the application logic but could also be
+                understood by the realm library.
+            </p>
+            <div class="col-md-6">
+                <ul>
+                    <li>
+                        As far as the application logic is concerned, Both <code>ParentItem</code> and
+                        <code>ChildItem</code> only need to contain
+                        one member used to denote their name.
+                    </li>
+                    <li>
+                        Additionally, since a given <code>ParentItem</code> may be associated with many
+                        <code>ChildItems</code> (a one-to-many) relationship,
+                        <code>ParentItem</code> must also contain a <code>List</code> of <code>ChildItems</code>. Here
+                        the type <code>List</code> is actually
+                        defined in the realm library, and as such it is necessary to specify the type of elements it
+                        will contain.
+                    </li>
+                    <li>
+                        Likewise, a given <code>ChildItem</code> must keep track of which <code>ParentItem</code> it
+                        belongs to. THis is accomplished
+                        by specifying a <code>Linking Object</code> that points to the <code>List</code> contained in an
+                        instance of a <code>ParentItem</code>.
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <code>
+                    <pre>
+class ParentItem: Object {
+    @objc dynamic var name: String = ""
+    let childItems = List<ChildItem>()
+}
+
+class ChildItem: Object {
+    @objc dynamic var name: String = ""
+    var parentItem = LinkingObjects(fromType: ParentItem.self, property: "childItems")
+}
+                    </pre>
+                </code>
+            </div>
+        </div>
+        <div class="pt-5"></div>
+        <div class="row">
+            <h3>User interface</h3>
+            <p>
+                Initially, I had intended to create the user interface using SwiftUI, but I decided to use Storyboard
+                layout
+                instead because
+                currently (iOS 15.6) the SwiftUI implementation of <code>UIAlertController</code> doesn't support adding
+                TextFields to the
+                alert. This is possible and easy to do from within a <code>ViewController</code> class. TextFields
+                contained
+                within an
+                alert will be an essential component of how the user interacts with the application by allowing them to
+                add
+                and edit list itmes.
+            </p>
+            <p>
+                The Storyboard layou for List Maker is shown below:
+            </p>
+            <div class="col-md-12">
+                <img src="images/ListMakeriOS/storyboard.png" alt="Storyboard layour for List Maker iOS" width="1200px"
+                    class="center">
+            </div>
+            <div class="pt-5"></div>
+            <div class="col-md-9">
+                <ul>
+                    <li>
+                        A <code>Navigation Controller</code> is used to provide a back button to the parent list when a
+                        child list item is selected.
+                    </li>
+                    <li>
+                        A <code>Bar Button Item</code> has been added to both <code>Table Views</code> allowing a user
+                        to add items.
+                    </li>
+                    <li>
+                        A segue has been defined between the parent list and child list viewcontrollers.
+                    </li>
+                </ul>
+            </div>
+            <div class="pt-5"></div>
+        </div>
+        <div class="row">
+            <h3>Application Logic: <code>ParentItemViewController</code></h3>
+            <p>
+                When using Storyboards, the viewcontroller class(es) are where the real magic happens. A
+                <code>View Controller</code> defines
+                how an iOS application should behave when a user interacts with it. This is accomplished by defining
+                <code>IBOutlets</code> which
+                designate how user interface (UI) elements should change under specific conditions and
+                <code>IBActions</code> which specify program
+                logic to execute if a UI element is interacted with. <code>IBOutlets</code> can be thought of
+                communicating application state
+                to the user, and <code>IBActions</code> can be thought of as transmitting user actions to the
+                application.
+            </p>
+            <div class="col-md-6">
+                <ul>
+                    <li>
+                        In order to use the built-in functionality provided by a <code>UITableViewController</code>
+                        it is necessary to state that our view controller class conforms to this protocol.
+                    </li>
+                    <li>
+                        An instance of our realm database is created.
+                    </li>
+                    <li>
+                        An object of <code>Results</code> type is declared. This object will hold any items
+                        returned by a query of our databse of type <code>ParentItem</code>.
+                    </li>
+                    <li>
+                        When the view controlled by this ViewController class loads, a method (defined below)
+                        <code>load()</code> is called to populate the Table View with any existing list items.
+                    </li>
+                    <li>
+                        Also in <code>viewDidLoad()</code>, support for allowing a user to long press a given
+                        list item is added. This long press gesture will be used to edit or delete list items.
+                    </li>
+                    <li>
+                        The <code>tableView ( cellForRowAt)</code> method defines how a given list element will
+                        be created. When creating the storyboard for this app, each Table View contained a prototype
+                        cell which in the case of the parent list view was given the identifier
+                        <code>ParentItemCell</code>.
+                        This method specifies that the Table View used in this ViewController class should use the
+                        specified
+                        prototype cells as a template for its list items. In this case the cell contains only a Text
+                        Label, which
+                        here is programmtically set to display either the <code>name</code> attribute of the
+                        <code>ParentItem</code>
+                        or else a message that no items have been added yet.
+                    </li>
+                    <li>
+                        The <code>tableView (didSelectRowAt)</code> method defines what will happen when a user taps on
+                        a given
+                        item, or in terms of the Table View, a given cell. In this case, we will navigate to the Table
+                        View
+                        designated for displaying <code>ChildItems</code>. We are able to pass the essential information
+                        of
+                        which <code>ParentItem</code> was tapped by using the <code>prepare (for segue)</code> method.
+                        The
+                        <code>ParentItem</code> name will then be set in the <code>ChildItemViewController</code> class
+                        where
+                        it will be used to query the realm database for all <code>ChildItems</code> associated with the
+                        tapped
+                        <code>ParentItem</code>.
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <code>
+                <pre>
+class ParentItemViewController: UITableViewController {
+
+    let realm = try! Realm()
+    
+    var parentItems: Results<ParentItem>?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        load()
+        
+        // support long press
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
+        tableView.addGestureRecognizer(longPress)
+    }
+    
+    //MARK: - Tableview Datascource Methods
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return parentItems?.count ?? 1
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ParentItemCell", for: indexPath)
+        cell.textLabel?.text = parentItems?[indexPath.row].name ?? "TODO: Add your first item!"
+        
+        return cell
+    }
+    
+    //MARK: - TableView Delegate Methods
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // navigate to items
+        performSegue(withIdentifier: "ParentToChild", sender: self)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationVC = segue.destination as! ChildItemViewController
+        if let indexPath = tableView.indexPathForSelectedRow {
+            destinationVC.parentItem = parentItems?[indexPath.row]
+        }
+    }
+                </pre>
+            </code>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li>
+                        The <code>load()</code> method will query the realm database for all <code>ParentItem</code>
+                        objects
+                        and store the results in the variable <code>parentItems</code>.
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <code>
+                    <pre>
+
+//MARK: - realm Database Methods
+
+func load() {
+    parentItems = realm.objects(ParentItem.self)
+    tableView.reloadData()
+}
+                    </pre>
+                </code>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li>
+                        The <code>save()</code> method is used to write or commit an object to the database. In this app
+                        <code>save()</code>
+                        will be used to both create new items. Becase realm's <code>write()</code> method can throw
+                        errors, it is necessary to wrap this statement within a
+                        <a href="https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html#ID512">do try
+                            catch</a> block.
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <code>
+                    <pre>
+func save(item: ParentItem) {
+    do {
+        try realm.write {
+            realm.add(item)
+        }
+    } catch {
+        print(error)
+    }
+    self.tableView.reloadData()
+}
+                    </pre>
+                </code>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li>
+                        The <code>delete()</code> method is used to delete a long tapped item. Similar to above, this
+                        method can
+                        throw erros and must be handled accordingly.
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <code>
+                <pre>
+func delete(indexPath: IndexPath) {
+    if let item = parentItems?[indexPath.row] {
+        do {
+            try realm.write {
+                realm.delete(item)
+            }
+        } catch {
+            print(error)
+        }
+    }
+    load()
+}
+                </pre>
+            </code>
+            </div>
+            <div class="col-md-6">
+                <ul>
+
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <code>
+            <pre>
+                
+            </pre>
+        </code>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li>
+                        The <code>update()</code> method is used to update the <code>name</code> attribute of a long
+                        tapped item.
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <code>
+                    <pre>
+func update(indexPath: IndexPath, newName: String) {
+    if let item = parentItems?[indexPath.row] {
+        do {
+            try realm.write {
+                item.name = newName
+            }
+        } catch {
+            print(error)
+        }
+    }
+    load()
+}
+                </pre>
+            </code>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li>
+                        The variable <code>newItemInput</code> will be used to store what a user types into a text field.
+                    </li>
+                    <li>
+                        The <code>add()</code> function creates a new <code>ParentItem</code> and sets its <code>name</code> 
+                        property to the value of the string entered into the text field. Afterwards, a call to the <code>save()</code> 
+                        method described above is used to commit the new item to the realm database.
+                    </li>
+                    <li>
+                        In iOS, alerts are created as an object of type <code>UIAlertController</code> and then available user responses, termed actions, 
+                        and of type <code>UIAlertAction</code> are subsequently added to alerts. 
+                        <ul>
+                            <li>
+                                <code>nilItemAlert</code> describes the alert message that will be dhown to a user if they do not 
+                                enter any text into the presented text field and attempt to add such an unamed item. 
+                            </li>
+                            <li>
+                                Affirmative and cancelling actions must be explicitly defined. An affirmative action will add the 
+                                nameless item to the database anyways, a cancelling action will dismiss the alert thereby aborting 
+                                the process of adding the item. 
+                            </li>
+                            <li>
+                                Similarily, an alert is created for adding a new object, and this alert will have a text field 
+                                attached to it allowing the user to name their new item. 
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <code>
+                    <pre>
+//MARK: - Add new items
+
+@IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+    var newItemInput = UITextField()
+    
+    func add() {
+        let newItem = ParentItem()
+        newItem.name = newItemInput.text!
+        save(item: newItem)
+    }
+    
+    
+    // In cthe event a new item is an empty string
+    let nilItemAlert = UIAlertController(title: "Empty Item", message: "Are you sure you want to add an item with no text? ", preferredStyle: .alert)
+    let nilItemActionAffirm = UIAlertAction(title: "Yes", style: .default) { action in
+        add()
+    }
+    let nilItemActionCancel = UIAlertAction(title: "No", style: .cancel, handler: nil)
+    nilItemAlert.addAction(nilItemActionAffirm)
+    nilItemAlert.addAction(nilItemActionCancel)
+    
+    let addItemAlert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
+    let addItemAction = UIAlertAction(title: "Add", style: .default) { action in
+        if newItemInput.text != "" {
+            add()
+        } else {
+            self.present(nilItemAlert, animated: true, completion: nil)
+        }
+    }
+    let cancelAddItem = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+    
+    addItemAlert.addTextField { (alertTextField) in
+        alertTextField.placeholder = "New item..."
+        newItemInput = alertTextField
+    }
+    addItemAlert.addAction(addItemAction)
+    addItemAlert.addAction(cancelAddItem)
+    present(addItemAlert, animated: true, completion: nil)
+}
+                    </pre>
+                </code>
+            </div>
+        </div>
