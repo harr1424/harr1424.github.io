@@ -481,7 +481,8 @@ func update(indexPath: IndexPath, newName: String) {
 
                 <div class="row">
                     <div class="col-md-6">
-                        <img src="images/ListMakeriOS/edit_or_cancel.png" alt="Initial long press dialog" class="img-fluid">
+                        <img src="images/ListMakeriOS/edit_or_cancel.png" alt="Initial long press dialog"
+                            class="img-fluid">
                     </div>
                     <div class="col-md-6">
                         <img src="images/ListMakeriOS/edit.png" alt="Edit option selected after long press"
@@ -490,8 +491,8 @@ func update(indexPath: IndexPath, newName: String) {
                 </div>
             </div>
 
-        <div class="col-md-6">
-            <code>
+            <div class="col-md-6">
+                <code>
                     <pre>
 //MARK: - Long Press Support Methods
 @objc func longPress(sender: UILongPressGestureRecognizer) {
@@ -527,5 +528,104 @@ func update(indexPath: IndexPath, newName: String) {
 }
                     </pre>
                 </code>
+            </div>
+        </div>
+        <div class="row">
+            <h3>Application Logic: <code>ChildItemViewController</code></h3>
+            <p>
+                The Table View responsible for displaying a list of <code>ChildItems</code> contains duplicate logic
+                for almost all of its operations, and this logic won't be re-explained in order to avoid redundancy.
+                The following diffeences are noteworthy:
+            </p>
+            <div class="col-md-6">
+                <ul>
+                    <li>
+                        <code>ChildItemViewController</code> contains a variable, <code>parentItem</code>
+                        that holds a reference to the <code>ParentItem</code> that was tapped in the previous
+                        Table View. Swift allows for variables to contain a <code>didSet</code> property that
+                        can execute code once the variable's value changes. (See
+                        <a href="https://docs.swift.org/swift-book/LanguageGuide/Properties.html">Property Observers in
+                            Swift</a>)
+                    </li>
+                    <li>
+                        In this case, when the variable <code>parentItem</code> is assigned a value via the
+                        <code>prepare (for segue)</code>
+                        method in <code>ParentItemViewController</code>, the <code>ChildItemViewController</code> class
+                        will call the
+                        <code>load()</code> method in order to retreive all relevant items.
+                    </li>
+                    <li>
+                        In this class, the <code>load()</code> method sets a variable of type <code>Results</code> to
+                        contain
+                        all <code>ChildItems</code> associated with the tapped <code>ParentItem</code>.
+                    </li>
+                </ul>
+
+            </div>
+            <div class="col-md-6">
+                <code>
+                <pre>
+class ChildItemViewController: UITableViewController {
+        
+    var parentItem: ParentItem? {
+        didSet{
+            load()
+        }
+    }
+
+    func load() {
+        items = parentItem!.childItems.sorted(byKeyPath: "name", ascending: true)
+        tableView.reloadData()
+    }
+                </pre>
+            </code>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li>
+                        When a <code>ChildItem</code> is added in this class, it is appended to the appropraite
+                        <code>ParentItem</code>
+                        member <code>childItems</code>.
+                    </li>
+                </ul>
+
+            </div>
+            <div class="col-md-6">
+                <code>
+                <pre>
+//MARK: - Add new items
+
+@IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+    var newItemInput = UITextField()
+    
+    func add() {
+        
+        if let parentItem = parentItem {
+            do {
+                try self.realm.write{
+                    let newItem = ChildItem()
+                    newItem.name = newItemInput.text!
+                    parentItem.childItems.append(newItem)
+                }
+            } catch {
+                print(error)
+            }
+        }
+    }
+                </pre>
+            </code>
+            </div>
+        </div>
+        <div class="pt-5"></div>
+        <div class="row">
+            <h3>Download the App and View the Project Source Code</h3>
+            <p>
+                That's it! This app is very straightforward. One of my earliest Android apps contained the same functionality, and I was 
+                curious to implement this in iOS. The realm database by MongoDB provides a developer-friendly way to persist data, and has 
+                excellent documentation. Core Data is another tried and true option for data persistence on iOS. 
+            </p>
+            <p>
+                View the project source code on <a href="https://github.com/harr1424/ListMakeriOS">GitHub</a>
+            </p>
         </div>
     </div>
