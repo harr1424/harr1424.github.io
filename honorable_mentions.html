@@ -203,7 +203,7 @@ def get_category(aqi):
 
 def get_AQI():
     # contact API endpoint
-    response = requests.get('https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=59801&distance=25&API_KEY=664ACC75-2DBA-4812-A360-619F57BBA12A')
+    response = requests.get('https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=59801&distance=25&API_KEY=REDACTED')
     data = response.json()
 
     # response payload for each pollutant
