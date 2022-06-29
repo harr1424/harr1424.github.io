@@ -54,12 +54,12 @@
             <p>
                 I originally created <a href="/mobile_app_dev.html">List Maker</a> as an Android application in order to
                 better
-                understand the Androud Room library which is used to persist data in a SQL database. The application is
-                straightforward,
+                understand the Android Room library, which is used to persist data in a SQL database. The application is
+                straightforward;
                 users are able to create a parent list of items wherein each item is capable of navigating to a child
                 list of items associated
                 with the parent item. For example, the main list displayed in the app may contain an item named
-                <code>Groceries</code> which when
+                <code>Groceries</code>, which when
                 tapped on, will navigate to a child list containing items such as <code>Milk, Eggs, Spinach</code>.
             </p>
             <p>
@@ -78,7 +78,7 @@
             <div class="col-md-6">
                 <ul>
                     <li>
-                        As far as the application logic is concerned, Both <code>ParentItem</code> and
+                        As far as the application logic is concerned, both <code>ParentItem</code> and
                         <code>ChildItem</code> only need to contain
                         one member used to denote their name.
                     </li>
@@ -87,12 +87,12 @@
                         <code>ChildItems</code> (a one-to-many) relationship,
                         <code>ParentItem</code> must also contain a <code>List</code> of <code>ChildItems</code>. Here
                         the type <code>List</code> is actually
-                        defined in the realm library, and as such it is necessary to specify the type of elements it
+                        defined in the realm library, and as such, it is necessary to specify the type of elements it
                         will contain.
                     </li>
                     <li>
                         Likewise, a given <code>ChildItem</code> must keep track of which <code>ParentItem</code> it
-                        belongs to. THis is accomplished
+                        belongs to. This is accomplished
                         by specifying a <code>Linking Object</code> that points to the <code>List</code> contained in an
                         instance of a <code>ParentItem</code>.
                     </li>
@@ -128,10 +128,10 @@ class ChildItem: Object {
                 within an
                 alert will be an essential component of how the user interacts with the application by allowing them to
                 add
-                and edit list itmes.
+                and edit list items.
             </p>
             <p>
-                The Storyboard layou for List Maker is shown below:
+                The Storyboard layout for List Maker is shown below:
             </p>
             <div class="col-md-12">
                 <img src="images/ListMakeriOS/storyboard.png" alt="Storyboard layour for List Maker iOS" width="1200px"
@@ -161,18 +161,18 @@ class ChildItem: Object {
                 When using Storyboards, the viewcontroller class(es) are where the real magic happens. A
                 <code>View Controller</code> defines
                 how an iOS application should behave when a user interacts with it. This is accomplished by defining
-                <code>IBOutlets</code> which
+                <code>IBOutlets</code>, which
                 designate how user interface (UI) elements should change under specific conditions and
-                <code>IBActions</code> which specify program
+                <code>IBActions</code>, which specify program
                 logic to execute if a UI element is interacted with. <code>IBOutlets</code> can be thought of
-                communicating application state
+                as communicating application state
                 to the user, and <code>IBActions</code> can be thought of as transmitting user actions to the
                 application.
             </p>
             <div class="col-md-6">
                 <ul>
                     <li>
-                        In order to use the built-in functionality provided by a <code>UITableViewController</code>
+                        In order to use the built-in functionality provided by a <code>UITableViewController</code>,
                         it is necessary to state that our view controller class conforms to this protocol.
                     </li>
                     <li>
@@ -191,15 +191,15 @@ class ChildItem: Object {
                         list item is added. This long press gesture will be used to edit or delete list items.
                     </li>
                     <li>
-                        The <code>tableView ( cellForRowAt)</code> method defines how a given list element will
+                        The <code>tableView (cellForRowAt)</code> method defines how a given list element will
                         be created. When creating the storyboard for this app, each Table View contained a prototype
-                        cell which in the case of the parent list view was given the identifier
+                        cell, which in the case of the parent list view was given the identifier
                         <code>ParentItemCell</code>.
                         This method specifies that the Table View used in this ViewController class should use the
                         specified
-                        prototype cells as a template for its list items. In this case the cell contains only a Text
+                        prototype cells as a template for its list items. In this case, the cell contains only a Text
                         Label, which
-                        here is programmtically set to display either the <code>name</code> attribute of the
+                        here is programmatically set to display either the <code>name</code> attribute of the
                         <code>ParentItem</code>
                         or else a message that no items have been added yet.
                     </li>
@@ -296,7 +296,7 @@ func load() {
                     <li>
                         The <code>save()</code> method is used to write or commit an object to the database. In this app
                         <code>save()</code>
-                        will be used to both create new items. Becase realm's <code>write()</code> method can throw
+                        will be used to create new items. Because realm's <code>write()</code> method can throw
                         errors, it is necessary to wrap this statement within a
                         <a href="https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html#ID512">do try
                             catch</a> block.
@@ -324,7 +324,7 @@ func save(item: ParentItem) {
                     <li>
                         The <code>delete()</code> method is used to delete a long tapped item. Similar to above, this
                         method can
-                        throw erros and must be handled accordingly.
+                        throw errors and must be handled accordingly.
                     </li>
                 </ul>
             </div>
@@ -403,14 +403,14 @@ func update(indexPath: IndexPath, newName: String) {
                         and of type <code>UIAlertAction</code> are subsequently added to alerts.
                         <ul>
                             <li>
-                                <code>nilItemAlert</code> describes the alert message that will be dhown to a user if
+                                <code>nilItemAlert</code> describes the alert message that will be shown to a user if
                                 they do not
-                                enter any text into the presented text field and attempt to add such an unamed item.
+                                enter any text into the presented text field and attempt to add such an unnamed item.
                             </li>
                             <li>
                                 Affirmative and cancelling actions must be explicitly defined. An affirmative action
                                 will add the
-                                nameless item to the database anyways, a cancelling action will dismiss the alert
+                                nameless item to the database anyways; a cancelling action will dismiss the alert
                                 thereby aborting
                                 the process of adding the item.
                             </li>
@@ -536,7 +536,7 @@ func update(indexPath: IndexPath, newName: String) {
             <p>
                 The Table View responsible for displaying a list of <code>ChildItems</code> contains duplicate logic
                 for almost all of its operations, and this logic won't be re-explained in order to avoid redundancy.
-                The following diffeences are noteworthy:
+                The following differences are noteworthy:
             </p>
             <div class="col-md-6">
                 <ul>
@@ -546,7 +546,7 @@ func update(indexPath: IndexPath, newName: String) {
                         Table View. Swift allows for variables to contain a <code>didSet</code> property that
                         can execute code once the variable's value changes. (See
                         <a href="https://docs.swift.org/swift-book/LanguageGuide/Properties.html">Property Observers in
-                            Swift</a>)
+                            Swift</a>).
                     </li>
                     <li>
                         In this case, when the variable <code>parentItem</code> is assigned a value via the
@@ -624,11 +624,11 @@ class ChildItemViewController: UITableViewController {
                 That's it! This app is very straightforward. One of my earliest Android apps contained the same
                 functionality, and I was
                 curious to implement this in iOS. The realm database by MongoDB provides a developer-friendly way to
-                persist data, and has
+                persist data, and it has
                 excellent documentation. Core Data is another tried and true option for data persistence on iOS.
             </p>
             <p>
-                View the project source code on <a href="https://github.com/harr1424/ListMakeriOS">GitHub</a>
+                View the project source code on <a href="https://github.com/harr1424/ListMakeriOS">GitHub</a>.
             </p>
             <div class="pt-5"></div>
             <div class="col-md-4"></div>
