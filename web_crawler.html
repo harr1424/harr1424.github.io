@@ -39,9 +39,11 @@
                     <li><a class="dropdown-item" href="CV.html">Cirriculum Vitae</a></li>
                     <li>
                         <hr class="dropdown-divider">
-                    <li><a class="dropdown-item" href="orange_weather.html">iOS Networking - Orange Weather</a></li>
-                    <li><a class="dropdown-item" href="list_maker.html">iOS Data Persistence - List Maker</a></li>
-                    <li><a class="dropdown-item" href="honorable_mentions.html">Honorable Mentions</a></li>
+                        <li><a class="dropdown-item" href="orange_weather.html">iOS Networking - Orange Weather</a></li>
+                        <li><a class="dropdown-item" href="list_maker.html">iOS Data Persistence - List Maker</a></li>
+                        <li><a class="dropdown-item" href="koradi_app.html">Fultter Radio App</a></li>
+                        <li><a class="dropdown-item" href="twitter_bot.html">Twitter Air Quality Bot</a></li>
+                        <li><a class="dropdown-item" href="web_crawler.html">Python Web Crawler</a></li>
 
 
                     </li>
@@ -58,39 +60,48 @@
                 <ul>
                     <li>
                         This python script was written to crawl a website in order to find any anchor tags that
-                        link to <code>.zip</code> file downloads. The addresses of these files is stored in a list and once
+                        link to <code>.zip</code> file downloads. The addresses of these files is stored in a list and
+                        once
                         crawling is completed the script will download each file using the <code>requests</code> module.
                     </li>
                     <li>
-                        The program user must specify a url to crael as well as where on their local machine that they 
+                        The program user must specify a url to crael as well as where on their local machine that they
                         wish to store downloaded files.
                     </li>
                     <li>
-                        Many sites block requests from clients that do not provide a user agent string in the reguest header. For this 
-                        reason I have specified a user agent agent representing a commonly used web browser. 
+                        Many sites block requests from clients that do not provide a user agent string in the reguest
+                        header. For this
+                        reason I have specified a user agent agent representing a commonly used web browser.
                     </li>
                     <li>
-                        The <code>crawl()</code> function reguests the html content of a web page and uses the <code>BeautifulSoup</code> 
-                        module to parse out each anchor tag's <code>href</code> attribute. 
+                        The <code>crawl()</code> function reguests the html content of a web page and uses the
+                        <code>BeautifulSoup</code>
+                        module to parse out each anchor tag's <code>href</code> attribute.
                     </li>
                     <li>
-                        <code>BeautifulSoup</code> has a <code>find</code> method which accepts a regular expression as an arguemnt. 
-                        Here this is used to find all anchor tag <code>href</code> attributes containing any pattern typical of 
-                        a english page on this particular site: an <code>/en</code> subdirectory followed by any number of any characters. 
+                        <code>BeautifulSoup</code> has a <code>find</code> method which accepts a regular expression as
+                        an arguemnt.
+                        Here this is used to find all anchor tag <code>href</code> attributes containing any pattern
+                        typical of
+                        a english page on this particular site: an <code>/en</code> subdirectory followed by any number
+                        of any characters.
                     </li>
                     <li>
                         These links are stored in a list named <code>authors</code>.
                     </li>
                     <li>
-                        The <code>authors</code> list is then subsequently crawled for any anchor tages with <code>href</code> attributes 
-                        containing a <code>.zip</code> file extension. 
+                        The <code>authors</code> list is then subsequently crawled for any anchor tages with
+                        <code>href</code> attributes
+                        containing a <code>.zip</code> file extension.
                     </li>
                     <li>
                         These links are then stored in a list named <code>target_links</code>.
                     </li>
                     <li>
-                        <a href="https://github.com/tqdm/tqdm">TQDM</a> is a module that provides a graphical represention of the 
-                        program's process. It can be used by simply wrapping any sort of iterable in it's invocation as follows: 
+                        <a href="https://github.com/tqdm/tqdm">TQDM</a> is a module that provides a graphical
+                        represention of the
+                        program's process. It can be used by simply wrapping any sort of iterable in it's invocation as
+                        follows:
                         <code>
                             <pre>
 for each in tqdm(some_list):
@@ -99,26 +110,30 @@ for each in tqdm(some_list):
                         </code>
                     </li>
                     <li>
-                        The <code>download()</code> function accepts as a single parameter a list of urls to download. 
-                        In this case, it is the list of all <code>.zip</code> files found on all english subdirectories of 
-                        the target website. 
+                        The <code>download()</code> function accepts as a single parameter a list of urls to download.
+                        In this case, it is the list of all <code>.zip</code> files found on all english subdirectories
+                        of
+                        the target website.
                     </li>
                     <li>
-                        The url for each file download is used to create a filename used to save the download onto the 
-                        program usr's local machine. 
+                        The url for each file download is used to create a filename used to save the download onto the
+                        program usr's local machine.
                     </li>
                     <li>
-                        The program user must have specified a path at which to save all downloads at the top of the script. 
-                        If this path does not exist, it will be created. 
+                        The program user must have specified a path at which to save all downloads at the top of the
+                        script.
+                        If this path does not exist, it will be created.
                     </li>
                     <li>
-                        If the file does not already exist at the specified path, it will be downloaded. Because most 
-                        files available for download on the internet are of considerable size, the files are broken into 
-                        1024MB chunks as they are downloaded and written to disk incrementally instead of attempting to write the entire file to disk at once. 
+                        If the file does not already exist at the specified path, it will be downloaded. Because most
+                        files available for download on the internet are of considerable size, the files are broken into
+                        1024MB chunks as they are downloaded and written to disk incrementally instead of attempting to
+                        write the entire file to disk at once.
                     </li>
                     <li>
-                        As this process can take a significant amount of time, <code>TQDM</code> has again been used in order to provide the 
-                        program user with a progress view. 
+                        As this process can take a significant amount of time, <code>TQDM</code> has again been used in
+                        order to provide the
+                        program user with a progress view.
                     </li>
                 </ul>
             </div>
@@ -194,8 +209,11 @@ if __name__ == "__main__":
             </div>
         </div>
     </div>
-        <!-- Option 1: Bootstrap Bundle with Popper -->
-        <script crossorigin="anonymous" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    <div style="text-align: center">
+        <h3> <a href="#">Top Of Page</a> </h3>
+    </div>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script crossorigin="anonymous" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

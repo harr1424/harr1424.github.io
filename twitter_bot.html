@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
+
+
+    <title>Honorable Mentions</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row ">
+            <div class="dropdown">
+                <a class="btn btn-secondary btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Portfolio Contents
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="index.html">Home</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="mobile_app_dev.html">Mobile Application Development</a></li>
+                    <li><a class="dropdown-item" href="cloud_computing.html">Cloud Computing</a></li>
+                    <li><a class="dropdown-item" href="3.html">Topic 3</a></li>
+                    <li><a class="dropdown-item" href="4.html">Topic 4</a></li>
+                    <li><a class="dropdown-item" href="5.html">Topic 5</a></li>
+                    <li><a class="dropdown-item" href="reflective_essay.html">Reflective Essay</a></li>
+                    <li><a class="dropdown-item" href="CV.html">Cirriculum Vitae</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                        <li><a class="dropdown-item" href="orange_weather.html">iOS Networking - Orange Weather</a></li>
+                        <li><a class="dropdown-item" href="list_maker.html">iOS Data Persistence - List Maker</a></li>
+                        <li><a class="dropdown-item" href="koradi_app.html">Fultter Radio App</a></li>
+                        <li><a class="dropdown-item" href="twitter_bot.html">Twitter Air Quality Bot</a></li>
+                        <li><a class="dropdown-item" href="web_crawler.html">Python Web Crawler</a></li>
+
+
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="pt-5"></div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>
+                    <a href="https://twitter.com/harr1424">Twitter Air Quality Bot</a>
+                </h3>
+                <ul>
+                    <li>
+                        This python script contacts the US Environmental Protection Agency's
+                        AirNow API to retrieve current Missoula Air Quality. This data is used to
+                        format a <i>tweet</i> informing followers of current air quality.
+                    </li>
+                    <li>
+                        API credentials have been saved as environment variables inside a docker container used
+                        to run this scriot on a server.
+                    </li>
+                    <li>
+                        The <code>Tweepy</code> module provides an object to handle authentication using the Open Auth
+                        protocol.
+                    </li>
+                    <li>
+                        The <code>Tweepy</code> module also provides an onject to access the Twitter API
+                    </li>
+                    <li>
+                        I've stored a url pointing to the official
+                        <a href="https://www.airnow.gov/?city=Missoula&state=MT&country=USA">airnow.gov</a> page
+                        describing air quality that will be included at the end of each tweet.
+                    </li>
+                    <li>
+                        The helper function <code>get_category</code> is used to return a string representation
+                        of the current air quality. This will be useful when formatting our tweet using python's
+                        <a href="https://peps.python.org/pep-0498/">f-string</a> method of string interpolation.
+                    </li>
+                    <li>
+                        The tweet begins with an empty string. This is so that any important information about the API
+                        response (i.e. if an expected object describing a pollutant is missing) may be prepended to the
+                        tweet.
+                    </li>
+                    <li>
+                        The original version of this script did not account for cases in which one or more of the
+                        expected JSON response objects did not exist, and this caused the script to fail and my Twitter
+                        profile to cease providing updates.
+                    </li>
+                    <li>
+                        This wasn't difficult to fix, but made me appreciate the built-in syntax for handling optional
+                        values
+                        in Swift, Kotlin, and Dart. It took some work to account for the possibility of null values (or
+                        None types) in
+                        Python, and in my opinion isn't as clean and elegant of a solution as a language that supports
+                        optional typing.
+                    </li>
+                    <li>
+                        Typically, the API returns a JSON array containing three objects. The first describing ozone,
+                        the second PM@.5 concentrations,
+                        and the third PM10 concentrations. For a brief time, the PM10 concentrations were not being
+                        sent, and the response appeared as follows:
+                        <code>
+                            <pre>
+                                [
+{
+    "DateObserved": "2022-06-28 ",
+    "HourObserved": 16,
+    "LocalTimeZone": "MST",
+    "ReportingArea": "Missoula",
+    "StateCode": "MT",
+    "Latitude": 46.8423,
+    "Longitude": -114.0205,
+    "ParameterName": "O3",
+    "AQI": 39,
+    "Category": {
+        "Number": 1,
+        "Name": "Good"
+    }
+},
+{
+    "DateObserved": "2022-06-28 ",
+    "HourObserved": 16,
+    "LocalTimeZone": "MST",
+    "ReportingArea": "Missoula",
+    "StateCode": "MT",
+    "Latitude": 46.8423,
+    "Longitude": -114.0205,
+    "ParameterName": "PM2.5",
+    "AQI": 42,
+    "Category": {
+        "Number": 1,
+        "Name": "Good"
+    }
+}
+]
+                            </pre>
+                        </code>
+                    </li>
+                    <li>
+                        My solution still assumes that JSON objects describing each pollutant will be returned in a
+                        specific order, and since
+                        this is not entirely guarenteed I have added some safeguards to ensure that innacurate air
+                        quality information is not
+                        boradcasted from my Twitter account.
+                    </li>
+                    <li>
+                        For example, consider the first object in the response, corresponding to ozone. If the JSON
+                        response array has at least
+                        one object, this first object will be assumed to contain data regarding ozone concentrations.
+                        However, if the
+                        <code>ParameterName</code> field of this object is not <code>O3</code>, then the local variable
+                        in this script
+                        corresponding to this data will be set to <code>None</code> type and the tweet will be
+                        preprended with a warning
+                        that the APU returned an unexpected payload.
+                    </li>
+                    <li>
+                        It is also necessary to convert the measurement time provided in the API response with
+                        conventional 12 hour format.
+                    </li>
+                    <li>
+                        In order to determine the top pollutant, I placed all pollutants and their most recently
+                        measured values into a
+                        dictionary so that it would be simple to iterate through all values to find the maximum value
+                        and return both the
+                        key and value.
+                    </li>
+                    <li>
+                        Because all keys in this dictionary have the potential to be of <code>None</code> type, it is
+                        necessary to specify that
+                        if a value is in fact <code>None</code> type, it should be set to negative infinity when
+                        compared to other values. This is
+                        because the Python <code>&gt</code> does not work with <code>None</code> types. By effectively
+                        casting these types to
+                        Doubles of an extremely small number, we ensure they are treated as would a value of zero.
+                    </li>
+                    <li>
+                        Once the key and value of the top pollutant have been obtained, the tweet can be formatted using
+                        f-string interpolation.
+                    </li>
+                    <li>
+                        Finally, this script is set to run infinitely at an interval of every three hours
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <pre>
+<code>
+import tweepy
+import requests
+import time
+import os
+
+API_KEY = os.environ['API_KEY']
+API_KEY_SECRET = os.environ['API_KEY_SECRET']
+ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+ACCESS_TOKEN_SECRET = os.environ['ACCESS_TOKEN_SECRET']
+
+auth = tweepy.OAuth1UserHandler(consumer_key=API_KEY, consumer_secret=API_KEY_SECRET, access_token=ACCESS_TOKEN, access_token_secret=ACCESS_TOKEN_SECRET)
+
+api = tweepy.API(auth, wait_on_rate_limit=True)
+
+# Provide reference to airnow.gov at the end of each tweet 
+airnow = 'https://www.airnow.gov/?city=Missoula&state=MT&country=USA'
+
+# helper function to return air quality category when passed an AQI value 
+def get_category(aqi):
+    if aqi < 51:
+        return "Good"
+    elif 50 < aqi < 101:
+        return "Moderate"
+    elif 100 < aqi < 151:
+        return "Unhealthy for Sensitive Groups"
+    elif 150 < aqi < 201:
+        return "Unhealthy"
+    elif 200 < aqi < 301: 
+        return "Very Unhealthy"
+    elif aqi > 300: 
+        return "Hazardous"
+    else: 
+        return "<category_error>"
+
+
+def get_AQI(): 
+    # the tweet which will be returned 
+    tweet = ''
+
+    # contact API endpoint 
+    response = requests.get('https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=59801&distance=25&API_KEY=664ACC75-2DBA-4812-A360-619F57BBA12A')
+    data = response.json()
+
+    # ensure that all pollutants are contained in response to avoid index out of range
+    num_pollutants = len(data)
+
+    # response payload for each pollutant 
+    o3 = data[0] if num_pollutants > 0 else None
+    pm25 = data[1] if num_pollutants > 1 else None
+    pm10 = data[2] if num_pollutants > 2 else None
+
+    # AQI for each pollutant
+    if o3:
+        if o3['ParameterName'] == 'O3':
+            o3_aqi = o3['AQI']
+        else:
+            o3_aqi = None
+            tweet += "API returned unexpected payload for Ozone! "
+    else:
+        o3_aqi = None
+        tweet += "No Ozone data provided. "
+
+    if pm25:
+        if pm25['ParameterName'] == 'PM2.5':
+            pm25_aqi = pm25['AQI']
+        else:
+            pm25_aqi = None
+            tweet += "API returned unexpected payload for PM2.5! "
+    else:
+        pm25_aqi = None
+        tweet += "No PM2.5 data provided. "
+
+    if pm10:
+        if pm10['ParameterName'] == 'PM10':
+            pm10_aqi = pm10['AQI']
+        else:
+            pm10_aqi = None
+            tweet += "API returned unexpected payload for PM10! "
+    else:
+        pm10_aqi = None
+        tweet += "No PM10 data provided. "
+
+    # format time correctly
+    if o3:
+        latest_measure = (12 - ((- o3['HourObserved']) % 12), 'AM' if o3['HourObserved'] < 11 else 'PM')
+    elif pm25:
+        latest_measure = (12 - ((- pm25['HourObserved']) % 12), 'AM' if pm25['HourObserved'] < 11 else 'PM')
+    elif pm10:
+        latest_measure = (12 - ((- pm10['HourObserved']) % 12), 'AM' if pm10['HourObserved'] < 11 else 'PM')
+    else: 
+        latest_measure = 'an unknown time. An error occurred.'
+
+    # dict containing pollutant, aqi as key, value
+    all_polutants = {
+        'Ozone (03)': o3_aqi if o3_aqi else None,
+        'Fine Particles (PM 2.5)' : pm25_aqi if pm25_aqi else None, 
+        'Course Particles (PM 10)' : pm10_aqi if pm10_aqi else None
+    }
+
+    # get the top pollutant
+    top_pollutant = max(all_polutants, key = lambda k: all_polutants[k] if all_polutants[k] != None else float('-inf'))
+
+    # get the value corresponding to the top pollutant
+    AQI = all_polutants[top_pollutant]
+
+    # format the tweet 
+    tweet += f'Current Missoula Air Quality Index is {AQI} ({get_category(AQI)}). The major pollutant is {top_pollutant}. This measurement occurred at {latest_measure[0]} {latest_measure[1]}. \n{airnow}'
+
+    return tweet
+
+
+if __name__ == "__main__": 
+    while True: 
+        try: 
+            api.verify_credentials()
+            try: 
+                api.update_status(status=get_AQI())
+            except Exception as e:
+                print("Status update failed")
+                print(e)
+        except Exception as e:
+            print("Authentication failed")
+            print(e)
+        # run this script every three hours
+        time.sleep(3 * 60 * 60)          
+    </code>
+    </pre>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center">
+        <h3> <a href="#">Top Of Page</a> </h3>
+    </div>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script crossorigin="anonymous" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
