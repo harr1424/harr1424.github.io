@@ -36,14 +36,15 @@
                     <li><a class="dropdown-item" href="4.html">Topic 4</a></li>
                     <li><a class="dropdown-item" href="5.html">Topic 5</a></li>
                     <li><a class="dropdown-item" href="reflective_essay.html">Reflective Essay</a></li>
-                    <li><a class="dropdown-item" href="/files/CV.docx" download="CV_JohnHarrington">Cirriculum Vitae</a></li>
+                    <li><a class="dropdown-item" href="/files/CV.docx" download="CV_JohnHarrington">Curriculum Vitae</a>
+                    </li>
                     <li>
                         <hr class="dropdown-divider">
-                        <li><a class="dropdown-item" href="orange_weather.html">iOS Networking - Orange Weather</a></li>
-                        <li><a class="dropdown-item" href="list_maker.html">iOS Data Persistence - List Maker</a></li>
-                        <li><a class="dropdown-item" href="koradi_app.html">Fultter Radio App</a></li>
-                        <li><a class="dropdown-item" href="twitter_bot.html">Twitter Air Quality Bot</a></li>
-                        <li><a class="dropdown-item" href="web_crawler.html">Python Web Crawler</a></li>
+                    <li><a class="dropdown-item" href="orange_weather.html">iOS Networking - Orange Weather</a></li>
+                    <li><a class="dropdown-item" href="list_maker.html">iOS Data Persistence - List Maker</a></li>
+                    <li><a class="dropdown-item" href="koradi_app.html">Flutter Radio App</a></li>
+                    <li><a class="dropdown-item" href="twitter_bot.html">Twitter Air Quality Bot</a></li>
+                    <li><a class="dropdown-item" href="web_crawler.html">Python Web Crawler</a></li>
 
 
                     </li>
@@ -59,20 +60,20 @@
                 </h3>
                 <ul>
                     <li>
-                        This python script contacts the US Environmental Protection Agency's
+                        This Python script contacts the US Environmental Protection Agency's
                         AirNow API to retrieve current Missoula Air Quality. This data is used to
                         format a <i>tweet</i> informing followers of current air quality.
                     </li>
                     <li>
                         API credentials have been saved as environment variables inside a docker container used
-                        to run this scriot on a server.
+                        to run this script on a server.
                     </li>
                     <li>
                         The <code>Tweepy</code> module provides an object to handle authentication using the Open Auth
                         protocol.
                     </li>
                     <li>
-                        The <code>Tweepy</code> module also provides an onject to access the Twitter API
+                        The <code>Tweepy</code> module also provides an object to access the Twitter API.
                     </li>
                     <li>
                         I've stored a url pointing to the official
@@ -81,7 +82,7 @@
                     </li>
                     <li>
                         The helper function <code>get_category</code> is used to return a string representation
-                        of the current air quality. This will be useful when formatting our tweet using python's
+                        of the current air quality. This will be useful when formatting our tweet using Python's
                         <a href="https://peps.python.org/pep-0498/">f-string</a> method of string interpolation.
                     </li>
                     <li>
@@ -147,27 +148,27 @@
                     <li>
                         My solution still assumes that JSON objects describing each pollutant will be returned in a
                         specific order, and since
-                        this is not entirely guarenteed I have added some safeguards to ensure that innacurate air
+                        this is not entirely guarenteed, I have added some safeguards to ensure that inaccurate air
                         quality information is not
                         boradcasted from my Twitter account.
                     </li>
                     <li>
-                        For example, consider the first object in the response, corresponding to ozone. If the JSON
+                        For example, consider the first object in the response corresponding to ozone. If the JSON
                         response array has at least
                         one object, this first object will be assumed to contain data regarding ozone concentrations.
                         However, if the
                         <code>ParameterName</code> field of this object is not <code>O3</code>, then the local variable
                         in this script
                         corresponding to this data will be set to <code>None</code> type and the tweet will be
-                        preprended with a warning
-                        that the APU returned an unexpected payload.
+                        prepended with a warning
+                        that the API returned an unexpected payload.
                     </li>
                     <li>
                         It is also necessary to convert the measurement time provided in the API response with
                         conventional 12 hour format.
                     </li>
                     <li>
-                        In order to determine the top pollutant, I placed all pollutants and their most recently
+                        In order to determine the top pollutant, I placed all pollutants and their most-recently
                         measured values into a
                         dictionary so that it would be simple to iterate through all values to find the maximum value
                         and return both the
@@ -176,7 +177,7 @@
                     <li>
                         Because all keys in this dictionary have the potential to be of <code>None</code> type, it is
                         necessary to specify that
-                        if a value is in fact <code>None</code> type, it should be set to negative infinity when
+                        if a value is, in fact, <code>None</code> type, it should be set to negative infinity when
                         compared to other values. This is
                         because the Python <code>&gt</code> does not work with <code>None</code> types. By effectively
                         casting these types to
@@ -187,7 +188,7 @@
                         f-string interpolation.
                     </li>
                     <li>
-                        Finally, this script is set to run infinitely at an interval of every three hours
+                        Finally, this script is set to run infinitely at an interval of every three hours.
                     </li>
                 </ul>
             </div>
@@ -290,7 +291,7 @@ def get_AQI():
     all_polutants = {
         'Ozone (03)': o3_aqi if o3_aqi else None,
         'Fine Particles (PM 2.5)' : pm25_aqi if pm25_aqi else None, 
-        'Course Particles (PM 10)' : pm10_aqi if pm10_aqi else None
+        'Coarse Particles (PM 10)' : pm10_aqi if pm10_aqi else None
     }
 
     # get the top pollutant
