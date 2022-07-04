@@ -16,9 +16,3 @@ ol {
     margin-right: auto;
 }
 
-.carousel-control.left, .carousel-control.right {
-    left: 0;
-    z-index: 1;
-  }
-
-
