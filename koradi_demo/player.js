@@ -272,23 +272,18 @@ Player.prototype = {
 // Setup our new audio player class and pass it the playlist.
 var player = new Player([
   {
-    title: 'The Awakening pt. 1',
-    file: 'Awakening1',
+    title: 'Moby - Live Forever',
+    file: 'LiveForever',
     howl: null
   },
   {
-    title: 'The Awakening pt. 2',
-    file: 'Awakening2',
+    title: 'Adagio For Strings',
+    file: 'AdagioForStrings',
     howl: null
   },
   {
-    title: 'The Awakening pt. 3',
-    file: 'Awakening3',
-    howl: null
-  },
-  {
-    title: 'Gnosis is Lived in Deeds',
-    file: 'Deeds',
+    title: 'Hans Zimmer - Time',
+    file: 'Time',
     howl: null
   }
 ]);
