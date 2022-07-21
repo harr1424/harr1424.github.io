@@ -55,7 +55,7 @@ Player.prototype = {
       sound = data.howl;
     } else {
       sound = data.howl = new Howl({
-        src: ['./audio/' + data.file + '.mp3'],
+        src: ['https://s3.us-west-2.amazonaws.com/radio.koradi.english/' + data.file + '.mp3'],
         html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
         onplay: function() {
           // Display the duration.
@@ -272,18 +272,18 @@ Player.prototype = {
 // Setup our new audio player class and pass it the playlist.
 var player = new Player([
   {
-    title: 'Moby - Live Forever',
-    file: 'LiveForever',
+    title: 'Lara Barge - The Art of Being',
+    file: 'Art_of_Being_Lara_Barge',
     howl: null
   },
   {
-    title: 'Adagio For Strings',
-    file: 'AdagioForStrings',
+    title: 'Javier Casan - Faith and Consciousness',
+    file: 'Faith_and_Consciousness_Javier_Casan',
     howl: null
   },
   {
-    title: 'Hans Zimmer - Time',
-    file: 'Time',
+    title: 'Rafael Arape - Imeage, Values, Identity, and The Awakening',
+    file: 'Image_Values_Identity_Awakening_Rafael_Arape',
     howl: null
   }
 ]);
